@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 2.5: Active shape models &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Project 2: Image segmentation" href="2.6_segmentation_project.html" />
+    <link rel="prev" title="Topic 2.4: Graph-cuts" href="2.4_graph_cuts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 2.5: Active shape models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Active-shape-models">1. Active shape models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Using-ASMs-for-segmentation-tasks">Using ASMs for segmentation tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-1.1:"><em>Exercise 1.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-1.2:"><em>Exercise 1.2:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-1.3:"><em>Exercise 1.3:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-1.4:"><em>Exercise 1.4:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-1.5:"><em>Exercise 1.5:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1.1:"><em>Question 1.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-1.6:"><em>Exercise 1.6:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1.2:"><em>Question 1.2:</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 2.5: Active shape models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/2.5_active_shape_models.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Topic-2.5:-Active-shape-models">
+<h1>Topic 2.5: Active shape models<a class="headerlink" href="#Topic-2.5:-Active-shape-models" title="Link to this heading"></a></h1>
+<p>This () notebook combines theory with exercises to support the understanding of active shape models for object detection in medical image segmentation. Implement all functions in the <code class="docutils literal notranslate"><span class="pre">code</span></code> folder of your cloned repository, and test it in this notebook after implementation. Use available markdown sections to fill in your answers.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic simple">
+<li><p>Active shape models</p>
+<ul class="simple">
+<li><p>Using ASMs for segmentation tasks</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>References:</strong></p>
+<p>[1] Active shape models: <a class="reference external" href="https://personalpages.manchester.ac.uk/staff/timothy.f.cootes/papers/cviu95.pdf">Cootes et al. Active Shape Models - Their Training and Application, Computer Vision and Image Understanding (1994)</a></p>
+<p>[2] Chapter 11.5 of the <a class="reference external" href="https://www.springer.com/gp/book/9781447160960">Guide to Medical Image Analysis by Tonnies, Klaus D</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div id="active_sm"></div><div style="float:right;margin:-5px 5px"><p><img alt="b09f1e298f3247299f37d9d19be7d2d5" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="1.-Active-shape-models">
+<h2>1. Active shape models<a class="headerlink" href="#1.-Active-shape-models" title="Link to this heading"></a></h2>
+<p>In object detection, model-based vision allows for the recognition and location of known objects or patterns despite the presence of occlusive phenomena (e.g. noise). But what if the appearance of the object varies? This is where rigid models become inefficient. Active shape models (ASMs) are statistical models of the shape of objects which iteratively deform to fit to an example of the object in a new image. Iterative deformation is achieved by active <strong>segmentation</strong> preceded by registration
+of a model to the new image. For a detailed explanation of ASM priciples, <strong>please read carefully the following article</strong>: <a class="reference external" href="https://personalpages.manchester.ac.uk/staff/timothy.f.cootes/papers/cviu95.pdf">Cootes et al. Active Shape Models - Their Training and Application, Computer Vision and Image Understanding (1994)</a></p>
+<p>In principle, an ASM aims to find shapes and acceptable variations of an object in a new image based on the model created from a sufficiently large training dataset. Variations in an active shape from a training phase are used to predict variation of unknown objects.</p>
+<p>An ASM describes a <span class="math notranslate nohighlight">\(K\)</span>-dimensional shape that has <span class="math notranslate nohighlight">\(L\)</span> boundary points in a <em>shape feature vector</em> <span class="math notranslate nohighlight">\(\mathbf{s} = (s_{0}, s_{1}, ..., s_{N}) = (x_{1,1} x_{1,2} ... x_{1,L}, x_{2,1} x_{2,2} ... x_{2,L}, ..., x_{K,1}, ... x_{K,L})\)</span>, where <span class="math notranslate nohighlight">\(x_{k,l}\)</span> denotes the <em>k</em>th component of the <em>l</em>th boundary point <span class="math notranslate nohighlight">\(\mathbf{x}_{i}\)</span>.</p>
+<p>With increasing <span class="math notranslate nohighlight">\(K\)</span> dimension of the shape feature vector, more samples in the feature space are needed to compute a reliable estimate.</p>
+<p>An ASM is defined by its probability density function (PDF) that reflects deformation within an object class. Computation of a probabilistic shape model from training samples is typically performed as follows:</p>
+<ol class="arabic simple">
+<li><p>Identify several points on the object boundary to select landmarks (Note: semantic equivalence of selected landmarks across all training data needs to be assured)</p>
+<ul class="simple">
+<li><p>primary landmarks are anatomical landmarks equivalent to anatomical locations (e.g. the brain’s Sylvian fissure)</p></li>
+<li><p>secondary landmarks are other image features, e.g. ridge intersections on the brain surface</p></li>
+<li><p>tertiary landmarks are used to represent curvature of the shape boundary</p></li>
+</ul>
+</li>
+<li><p>Align landmarks within a common coordinate system</p></li>
+<li><p>Decorrelate the estimated covariance matrix to obtain uncorrelated features with eigenvectors of that covariance matrix</p></li>
+<li><p>Clean up the feature space by only keeping significant variations that lie below some percentage of the total variance in the training data.</p></li>
+</ol>
+<p>As you may correctly anticipate, there are several bottlenecks present in the process of estimating the probabilistic shape model. Semantic equivalence is often difficult, let alone impossible to determine. Moreover, human interaction is required for landmark detection, which is rarely feasible in medical practice. Hence, landmark detection is conducted based on local attributes (e.g. curvatures), geometric shape features or registration of atlases. Moreover, landmark alignment based on invalid
+assumptions about the object’s coordinate system may cause wrong shape variation. Last but not least, the limited amount of training samples typically present in practice leads to a decrease in the significance of the estimated probability distribution.</p>
+<p>Further information about active shape models as well as active appearance models can be found in <a class="reference external" href="https://www.springer.com/gp/book/9781447160960">chapter 11.5 of the Guide to Medical Image Analysis by Tonnies, Klaus D</a>.</p>
+<div id="active_sm_usage"></div><section id="Using-ASMs-for-segmentation-tasks">
+<h3>Using ASMs for segmentation tasks<a class="headerlink" href="#Using-ASMs-for-segmentation-tasks" title="Link to this heading"></a></h3>
+<p>As mentioned above, most of the issues related to estimating the probability density function of an ASM represent classification problems. Hence, the ASM approach is suitable for segmentation tasks. The main idea is to apply an ASM such that its shape is aligned and deformed to fit a potential shape instance in an image. ASM-assisted segmentation is done in the following steps:</p>
+<ol class="arabic simple">
+<li><p>Register an active shape model with new image data that contain a shape which is not accounted for in the shape model in terms of position, orientation and scale</p></li>
+</ol>
+<center width="100%"><p><img alt="0fe78e321fb843a99d8df28c94f24039" class="no-scaled-link" src="../_images/asm_registration.png" width="600" /></p>
+</center><p>Figure from <a class="reference external" href="https://www.springer.com/gp/book/9781447160960/">Toennies K.D. Guide to Medical Image Analysis</a></p>
+<ol class="arabic simple" start="2">
+<li><p>Apply local deformations of the shape model to fit the object in the target image, thereby creating a new estimate for computing the next pose estimate (positions of the model shape with deformations)</p></li>
+</ol>
+<center width="100%"><p><img alt="f433dd275df04a2a8232b50817e04e31" class="no-scaled-link" src="../_images/asm_deformation.png" width="300" /></p>
+</center><p>Figure from <a class="reference external" href="https://www.springer.com/gp/book/9781447160960/">Toennies K.D. Guide to Medical Image Analysis</a></p>
+<ol class="arabic simple" start="3">
+<li><p>Compute as many pose estimates as are required for convergence.</p></li>
+</ol>
+<div style="float:right;margin:-5px 5px"><p><img alt="85487161e7c54c84b00ce4035241e367" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-1.1:">
+<h3><em>Exercise 1.1:</em><a class="headerlink" href="#Exercise-1.1:" title="Link to this heading"></a></h3>
+<p>In the <code class="docutils literal notranslate"><span class="pre">plot_hand_shapes()</span></code> function in <code class="docutils literal notranslate"><span class="pre">active_shape_models.py</span></code>, we start with loading <code class="docutils literal notranslate"><span class="pre">coordinates.txt</span></code> which contains coordinates of 40 hand shapes, each represented by 56 points. Dimensions 1 to 56 store the <span class="math notranslate nohighlight">\(x\)</span>-coordinate and dimensions 57 to 112 store the <span class="math notranslate nohighlight">\(y\)</span>-coordinate. Let’s plot a few shapes to examine the variation. What do you think the mean shape will look like? Compute it to verify your guess. Implement this functionality in the <code class="docutils literal notranslate"><span class="pre">plot_hand_shapes()</span></code> function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">active_shape_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_hand_shapes</span>
+<span class="n">plot_hand_shapes</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.5_active_shape_models_4_0.png" src="../_images/reader_2.5_active_shape_models_4_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.5_active_shape_models_4_1.png" src="../_images/reader_2.5_active_shape_models_4_1.png" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="9ff50b24bf244151b033d6022ec5d56d" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-1.2:">
+<h3><em>Exercise 1.2:</em><a class="headerlink" href="#Exercise-1.2:" title="Link to this heading"></a></h3>
+<p>Apply <code class="docutils literal notranslate"><span class="pre">mypca</span></code> (from the given code on PCA) to the coordinates data. How many dimensions are needed to describe 98% of the variance? Store only the vectors corresponding to these dimensions in <code class="docutils literal notranslate"><span class="pre">v</span></code>. Implement your code in the <code class="docutils literal notranslate"><span class="pre">pca_hands()</span></code> function of the <code class="docutils literal notranslate"><span class="pre">active_shape_models.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">active_shape_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">pca_hands</span>
+<span class="n">num_dims</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pca_hands</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of dimensions explaining 98% variance: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_dims</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Eigenvectors for these dimensions (shape): </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v_new</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of dimensions explaining 98% variance: 6
+Eigenvectors for these dimensions (shape): (112, 6)
+</pre></div></div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="1d3818b655484a338f064fa995d27909" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-1.3:">
+<h3><em>Exercise 1.3:</em><a class="headerlink" href="#Exercise-1.3:" title="Link to this heading"></a></h3>
+<p>Create a loop in the <code class="docutils literal notranslate"><span class="pre">test_remaining_variance()</span></code> function of the <code class="docutils literal notranslate"><span class="pre">active_shape_models.py</span></code> module to go through the dimensions left in <code class="docutils literal notranslate"><span class="pre">v</span></code> and compute a variation that this dimension produces. For the weight, you might want to use the corresponding eigenvalue multiplied by a small scaling factor, like <span class="math notranslate nohighlight">\(5\)</span>. What is the main variation that you notice?</p>
+<p>Note: If you see the warning <strong>ComplexWarning: Casting complex values to real discards the imaginary part</strong>, just ignore it.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">active_shape_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_remaining_variance</span>
+<span class="n">test_remaining_variance</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.5_active_shape_models_8_0.png" src="../_images/reader_2.5_active_shape_models_8_0.png" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="f8f80c30ec204b7b8374757958184212" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-1.4:">
+<h3><em>Exercise 1.4:</em><a class="headerlink" href="#Exercise-1.4:" title="Link to this heading"></a></h3>
+<p>Let’s load the image <code class="docutils literal notranslate"><span class="pre">test001.jpg</span></code> from the <code class="docutils literal notranslate"><span class="pre">dataset_hands</span></code> folder, and view it in grayscale. If you were to plot the hand template on top of this image, what do you expect to happen? Verify your hypothesis. Implement your code in the <code class="docutils literal notranslate"><span class="pre">plot_hand_grayscale()</span></code> function of the <code class="docutils literal notranslate"><span class="pre">active_shape_models.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">active_shape_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_hand_grayscale</span>
+<span class="n">plot_hand_grayscale</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.5_active_shape_models_10_0.png" src="../_images/reader_2.5_active_shape_models_10_0.png" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="93bf4df78ed647f8aeeb896968f63eef" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-1.5:">
+<h3><em>Exercise 1.5:</em><a class="headerlink" href="#Exercise-1.5:" title="Link to this heading"></a></h3>
+<p>Let’s transform your mean hand shape into a 2x56 dataset with <code class="docutils literal notranslate"><span class="pre">initialpos</span> <span class="pre">=</span> <span class="pre">[[meanhand[0,:56]],</span> <span class="pre">[meanhand[0,56:112]]]</span></code>. Think about the registration exercises you did before. Define a transformation matrix (you can try out yourself what numbers are needed) and use it to plot the hand template close to the hand in the image. Implement your code in the <code class="docutils literal notranslate"><span class="pre">test_transformed_hand()</span></code> function of the <code class="docutils literal notranslate"><span class="pre">active_shape_models.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">active_shape_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_transformed_hand</span>
+<span class="n">test_transformed_hand</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.5_active_shape_models_12_0.png" src="../_images/reader_2.5_active_shape_models_12_0.png" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="b19956172f5d4212a1fb26636e38aced" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-1.1:">
+<h3><em>Question 1.1:</em><a class="headerlink" href="#Question-1.1:" title="Link to this heading"></a></h3>
+<p>Consider an active shape model for segmentation of the ventricles in the sample brain images. Describe which steps you would need to do for the data that is available to us, to train a shape model of the ventricles.</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="9f60d51de1ca4555a277468a627e1093" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-1.6:">
+<h3><em>Exercise 1.6:</em><a class="headerlink" href="#Exercise-1.6:" title="Link to this heading"></a></h3>
+<p>You can inspect the mask of the ventricles in the sample brain images using the code below.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="n">GT</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;../data/dataset_brains/1_1_gt.tif&#39;</span><span class="p">)</span>
+<span class="n">gtMask</span> <span class="o">=</span> <span class="n">GT</span> <span class="o">==</span> <span class="mi">4</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">GT</span><span class="p">)</span>
+<span class="n">ax2</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gtMask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x11f96ee50&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.5_active_shape_models_16_1.png" src="../_images/reader_2.5_active_shape_models_16_1.png" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="7856e7a043fc47389d1f85db5182c23e" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-1.2:">
+<h3><em>Question 1.2:</em><a class="headerlink" href="#Question-1.2:" title="Link to this heading"></a></h3>
+<p>Look at the ventricle masks for different subjects and different slices. Based on the shapes that you see, what difficulties do you think you might face, if you wanted to train an active shape model? How could you modify the dataset to overcome these difficulties?</p>
+<p>Type your answer here</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="2.4_graph_cuts.html" class="btn btn-neutral float-left" title="Topic 2.4: Graph-cuts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="2.6_segmentation_project.html" class="btn btn-neutral float-right" title="Project 2: Image segmentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 1.5: Validation in medical image analysis (Registration) &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Project 1: Image registration" href="1.6_Registration_project.html" />
+    <link rel="prev" title="Topic 1.4: Intensity-based registration" href="1.4_Intensity-based_registration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 1.5: Validation in medical image analysis (Registration)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Validation-(concepts)">1. Validation (concepts)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.1-Ground-truth">1.1 Ground truth</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Ground-truth-from-real-data">Ground truth from real data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Ground-truth-from-phantoms">Ground truth from phantoms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Data-representativeness">Data representativeness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Statistical-significance">Statistical significance</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#1.3-Measures-of-quality">1.3 Measures of quality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Registration---quality-measures">Registration - quality measures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 1.5: Validation in medical image analysis (Registration)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/1.5_Validation_in_medical_image_analysis_part_1.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Topic-1.5:-Validation-in-medical-image-analysis-(Registration)">
+<h1>Topic 1.5: Validation in medical image analysis (Registration)<a class="headerlink" href="#Topic-1.5:-Validation-in-medical-image-analysis-(Registration)" title="Link to this heading"></a></h1>
+<p>This notebook combines theory with questions to support the understanding of validation metrics in medical image analysis. Use available markdown sections to fill in your answers to questions as you proceed through the notebook.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic">
+<li><p>Validation (concepts)</p>
+<p>1.1 Ground truth</p>
+<ul class="simple">
+<li><p>Ground truth from real data</p></li>
+<li><p>Ground truth from phantoms</p></li>
+<li><p>Data representativeness</p></li>
+<li><p>Statistical significance</p></li>
+</ul>
+<p>1.2 Measures of quality</p>
+<ul class="simple">
+<li><p>Registration - quality measures</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>References:</strong></p>
+<p>[1] Measures of quality: <a class="reference external" href="https://link.springer.com/book/10.1007/978-1-4471-2751-2">Toennies Klaus, D. Guide to Medical Image Analysis - Methods and Algorithms, Chapter 13.1</a></p>
+<p>[2] Ground truth: <a class="reference external" href="https://link.springer.com/book/10.1007/978-1-4471-2751-2">Toennies Klaus, D. Guide to Medical Image Analysis - Methods and Algorithms, Chapter 13.2</a></p>
+<p>[3] Limitations of performance metrics: <a class="reference external" href="https://arxiv.org/abs/2104.05642">Reinke et al. Common Limitations of Image Processing Metrics: A Picture Story.</a></p>
+<p>[4] Assessment of registration errors: <a class="reference external" href="https://spie.org/Publications/Proceedings/Paper/10.1117/12.813601">Fitzpatrick, M. Visualization, Image-Guided Procedures and Modeling, 7261:1–12, SPIE Medical Imaging (2009).</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div id="validation"></div><div style="float:right;margin:-5px 5px"><p><img alt="6f47397077204cdb9b43883ccf0c9f13" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="1.-Validation-(concepts)">
+<h2>1. Validation (concepts)<a class="headerlink" href="#1.-Validation-(concepts)" title="Link to this heading"></a></h2>
+<p>Validation of medical image analysis methods is the estimation of correctness of certain results from tests of a method on a representative sample set. In e.g. software design, validation is the evaluation of the degree to which user needs (performance requirements) are met, i.e. whether the right software is being built. In medical image analysis, we usually talk about technical validation, where the aim is to evaluate the performance of computing algorithms with respect to e.g. segmentation
+accuracy. Validation is used in various image computing classes (registration, segmentation, detection, classification, quantification).</p>
+<p>Prior to performing validation, suitable data needs to be selected, comparison measures need to be chosen, and a norm (e.g. ground-truth, explained below) needs to be defined. <strong>Remember that every validation study must have a hypothesis on performance (e.g. outcome is better than…), and a ground truth (gold standard) is essential</strong>. Validation can provide information about our method with respect to another method used to generate the same results (cross-validation). It is
+mandatory to document a detailed description of the validation procedure together with a well-founded justification of selected measures, as it allows potential new users of the method to investigate the validity of the arguments used to build the validation scenario.</p>
+<section id="1.1-Ground-truth">
+<h3>1.1 Ground truth<a class="headerlink" href="#1.1-Ground-truth" title="Link to this heading"></a></h3>
+<p><em>“In medical image analysis, the truth is difficult to come by, since the reason for producing images in the first place was to gather information about the human body that cannot be accessed otherwise.”</em></p>
+<p>Ground truth is a conceptual term relative to the knowledge of the truth concerning a specific question (the “ideal expected result”). In validation, all measures of quality estimation for an analysis method require comparison of the method’s produced results with the true information. Ground truth data can be either real or artificial, however, it is never completely certain whether selected data are representative of the desired ground truth. See also <a class="reference external" href="https://www.springer.com/gp/book/9781447160960">chapter 13.2 of the Guide to Medical
+Image Analysis by Tonnies, Klaus D</a></p>
+<div id="gt_real_data"></div><section id="Ground-truth-from-real-data">
+<h4>Ground truth from real data<a class="headerlink" href="#Ground-truth-from-real-data" title="Link to this heading"></a></h4>
+<p>Ground truth based on real data can be created by applying the currently established best method to it if such method exists at all. An example is the use of mutual information and spline-based non-rigid registration for registering MR brain images. An often encountered problem is proving that the conditions under which a standard is applied, are comparable with those conditions under which they are considered to be an established standard. Moreover, the implementation of the established methods
+is rarely available, even though these days, more implementations become open-source or integrated in widely used freely downloadable software packages.</p>
+<p>If an established method is missing, human experts may help produce ground truth data through <em>manual data annotation</em>. This approach requires a lot of effort both from the method’s developer, as well as the expert who has to carry out the analysis on several datasets, document findings, and sometimes it is desirable to have the expert analyze the data(sets) multiple times (intra-observer variability) to increase the significance of the results. The developer must provide a sufficiently good
+user interface for the expert to avoid bias by the input component quality. Sometimes it may be more beneficial to ask more experts and measure (inter-observer) variability. In such case, it is crucial to define what is meant by agreement among all (e.g. agreement by all / the majority of observers, etc.).</p>
+<div id="gt_phantoms"></div></section>
+<section id="Ground-truth-from-phantoms">
+<h4>Ground truth from phantoms<a class="headerlink" href="#Ground-truth-from-phantoms" title="Link to this heading"></a></h4>
+<p>Phantoms can be used as ground truth as well. They are classified as follows:</p>
+<p><em>Based on real data</em></p>
+<ul class="simple">
+<li><p>cadaver phantoms (human or animal)</p></li>
+<li><p>artificial hardware phantoms (e.g. CT and MRI slices generated in the <a class="reference external" href="http://vhp.med.umich.edu/">Visible Human Project</a>)</p></li>
+</ul>
+<p><em>Based on simulated data</em></p>
+<ul class="simple">
+<li><p>software phantoms representing the reconstructed image or the imaged measurement distribution</p></li>
+<li><p>mathematical simulations (e.g. Shepp-logan phantom)</p></li>
+</ul>
+<p>Phantoms are characteristic for specific properties (material, measurement properties, influences from image reconstruction, shape properties), according to which they are applied in different tasks. Phantoms are only useful in validation analyses when results have been generated in them. For a detection task, a couple of locations must be specified, and for registration tasks, fiducial markers have to be implanted, for example. Material and measurement properties are often idealized. Image
+artefacts are typically simulated, e.g. by using zero-mean Gaussian noise to simulate detector noise; smoothing data to evoke partial volume effects or through inclusion of artificial shading to model signal fluctuations.</p>
+<p>The advantage of a software phantom is that it is more straightforward to account for anatomical variation by creating several phantoms with different shapes, unlike in hardware phantoms, where anatomical variation can hardly be modelled. Examples of software phantoms include the BrainWeb phantom; the Field II ultrasound simulation program; the XCAT phantom; or the dynamic MCAT heart phantom simulating a moving heart.</p>
+<div id="data_representativeness"></div></section>
+<section id="Data-representativeness">
+<h4>Data representativeness<a class="headerlink" href="#Data-representativeness" title="Link to this heading"></a></h4>
+<p>To make a (ground truth) dataset representative, all data properties that may have an impact on the performance of an analysis method should be reflected in it. Representativeness can be enforced by:</p>
+<ul class="simple">
+<li><p>separation between test and training data (leave-one-out technique in classification tasks); if optimal parameters have to be determined for a method, it is unacceptable to validate the results on ground-truth data which has been used to arrive at the optimal parameter value</p></li>
+<li><p>identification of sources of variation (all should be covered by the ground truth data) and outlier detection (experts can help)</p></li>
+<li><p>robustness with respect to parameter variation (e.g. changes in input thresholds)</p></li>
+</ul>
+<div id="stat_significance"></div></section>
+<section id="Statistical-significance">
+<h4>Statistical significance<a class="headerlink" href="#Statistical-significance" title="Link to this heading"></a></h4>
+<p>While your analysis results may seem satisfactory, there is a chance that they are statistically insignificant due to low number of samples in your validation set. Significance of an experimental outcome can be indicated by the well-known <span class="math notranslate nohighlight">\(p\)</span>-value. For example, the probability of less than <span class="math notranslate nohighlight">\(1\%\)</span> that a result arose by chance would be expressed as <span class="math notranslate nohighlight">\(p &lt; 0.01\)</span>. Significance can be calculated via the <a class="reference external" href="https://towardsdatascience.com/the-statistical-analysis-t-test-explained-for-beginners-and-experts-fd0e358bbb62">Student’s
+t-test</a>, which helps you find out if there is a statistical difference between two compared groups.</p>
+<div id="quality_measures"></div></section>
+</section>
+<section id="1.3-Measures-of-quality">
+<h3>1.3 Measures of quality<a class="headerlink" href="#1.3-Measures-of-quality" title="Link to this heading"></a></h3>
+<p>Quality is determined by the kind of analysis which has been conducted on a dataset:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Task</p></th>
+<th class="head"><p>Quality measure</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Segmentation</p></td>
+<td><p>Correspondence between the segmented object and a reference segmentation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Registration</p></td>
+<td><p>Deviation from the correct registration transformation</p></td>
+</tr>
+<tr class="row-even"><td><p>Computer-aided detection (CAD)</p></td>
+<td><p>Ratio between correct and incorrect decisions</p></td>
+</tr>
+</tbody>
+</table>
+<p>See also <a class="reference external" href="https://www.springer.com/gp/book/9781447160960">chapter 13.1 of the Guide to Medical Image Analysis by Tonnies, Klaus D</a></p>
+<div id="reg_qm"></div><section id="Registration---quality-measures">
+<h4>Registration - quality measures<a class="headerlink" href="#Registration---quality-measures" title="Link to this heading"></a></h4>
+<p>Registration aims to find a geometric transformation that maps an <span class="math notranslate nohighlight">\(n\)</span>-dimensional image onto another one, bringing both images into alignment. In case of different dimensionalities of the registered objects, the transformation includes a projection step of the scene from higher dimension to the scene of lower dimension. The steps to evaluate registration accuracy when working with point-based registration are explained in <a class="reference internal" href="1.2_Point-based_registration.html"><span class="doc">section 1 of notebook
+1.2</span></a>.</p>
+<p>The quality of a registration method can be measured as the average deviation of known transformation parameters based on comparisons between vector fields (for non-rigid registration) or differences in global rotation and translation (for rigid transformation). Another way of assessing quality for a registration task is to compute locations of fiducials after registration, however, <strong>one should never use the same corresponding point pairs/fiducials or image similarity metric were used for
+optimization when computing the registration transformation!</strong></p>
+<p>We use Fiducial Localization Error (FLE), Fiducial Registration Error (FRE) and Target Registration Error (TRE) to evaluate registration accuracy:</p>
+<ul class="simple">
+<li><p>FLE quantifies the error in determining the location of a point which is used to estimate the registration transformation.</p></li>
+<li><p>FRE is the error of the fiducial markers following registration, i.e. <span class="math notranslate nohighlight">\(\vert\vert\,T(\mathbf{p_{f}}) - \mathbf{p_{m}})\vert\vert\)</span>, where <span class="math notranslate nohighlight">\(T\)</span> is the estimated transformation and <span class="math notranslate nohighlight">\(\mathbf{p_{f}}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{p_{m}}\)</span> are the points that were <strong>used for estimation</strong>.</p></li>
+<li><p>TRE computes the error of the target fiducials following registration, i.e. <span class="math notranslate nohighlight">\(\vert\vert\,T(\mathbf{p_{f}}) - \mathbf{p_{m}})\vert\vert\)</span>, where <span class="math notranslate nohighlight">\(T\)</span> is the estimated transformation and <span class="math notranslate nohighlight">\(\mathbf{p_{f}}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{p_{m}}\)</span> are the points that were <strong>not used for estimation</strong>.</p></li>
+</ul>
+<p>It is important to remember that FRE should never be utilized as a surrogate for TRE as the two error measures are uncorrelated given a specific registration task. Typically, we can only estimate the distribution of TRE as it is spatially varying. A good TRE depends on using a good fiducial configuration. More information on FRE and TRE can be found <a class="reference external" href="https://spie.org/Publications/Proceedings/Paper/10.1117/12.813601?SSO=1">in this article</a>.</p>
+<p>If the transformation is unknown, image similarity metrics (see <a class="reference internal" href="1.3_Image_similarity_metrics.html"><span class="doc">notebook 1.3</span></a>), and the Structural Similarity Index (SSIM) can be used. The SSIM is a perceptual image quality measure indicating whether two images are very similar or the same (a value of <span class="math notranslate nohighlight">\(+1\)</span>) or very different (a value of <span class="math notranslate nohighlight">\(-1\)</span>).</p>
+<center width="100%"><p><img alt="e61674d08afb425489ea6bc01acd9c1e" class="no-scaled-link" src="../_images/quality_measures_registration_tasks.png" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://link.springer.com/book/10.1007/978-1-4471-2751-2">Guide to Medical Image Analysis - Methods and Algorithms</a></p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="1.4_Intensity-based_registration.html" class="btn btn-neutral float-left" title="Topic 1.4: Intensity-based registration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="1.6_Registration_project.html" class="btn btn-neutral float-right" title="Project 1: Image registration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

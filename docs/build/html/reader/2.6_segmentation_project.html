@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project 2: Image segmentation &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Topic 2.5: Active shape models" href="2.5_active_shape_models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project 2: Image segmentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Deliverables">Deliverables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Assessment">Assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Preliminary-guided-project-work">Preliminary guided project work</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.-Creating-datasets">1. Creating datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.-Model-selection-and-generalization">2. Model selection and generalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#3.-Combining-different-methods">3. Combining different methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Open-ended-project-work">Open-ended project work</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Project 2: Image segmentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/2.6_segmentation_project.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<section id="Project-2:-Image-segmentation">
+<h1>Project 2: Image segmentation<a class="headerlink" href="#Project-2:-Image-segmentation" title="Link to this heading"></a></h1>
+<section id="Goal">
+<h2>Goal<a class="headerlink" href="#Goal" title="Link to this heading"></a></h2>
+<p>The goal in this project is to create a tissue segmentation method, based on the techniques you have seen so far. This method should generalize well to different images. We will be using the same images as in the segmentation exercises.</p>
+<p>Similar to project 1, your assignment is to investigate of what method or combination of methods is most suitable for doing this. In this investigation, you should explain the choices you are making, for example by referring to what you studied in class, showing plots etc.</p>
+<p>There isn’t one correct answer for the project. Your reasoning should show the reader that you understand the methods you studied, how to apply them to tissue segmentation and interpret the results. Consider these two example answers:</p>
+<ul class="simple">
+<li><p>(Poor) “We tried all combinations of features, and features A and B gave the best error, therefore you should always use features A and B”</p></li>
+<li><p>(Good) “Based on the scatterplots, we saw that features A and B, and features B and C, provided a good separation of the classes. We created learning curves for these two combinations. For features A and B, the error was lower for all training sizes. We then used the classifier trained on 1000 samples to visualize the predicted mask next to the true mask. Here we can see that the classifier makes many errors for the skull pixels, because their appearance is similar to pixels inside the
+brain.”</p></li>
+</ul>
+<p>The assignment consists of two parts, as a first step there is preliminary guided project work, and as a second step you must investigate a suitable research question based on the methods you have developed. A research question based on the preliminary guided project work below, completing the programming tasks and answering the theory questions, is the minimal solution to this project. If this is done well and accompanied by a suitable report, this will be graded with a ‘sufficient’ grade. To
+achieve higher grades, you need to go beyond the minimal solution. You should use what you have implemented and the available data to come up with and answer a suitable research question. Write about this in your report.</p>
+</section>
+<section id="Deliverables">
+<h2>Deliverables<a class="headerlink" href="#Deliverables" title="Link to this heading"></a></h2>
+<p>A completed version of this notebook, the documented python code that you developed, and a report describing your research question, results and analysis. The report is expected in a short, concise format. It focusses on your specific research questions, results and discussion. The lecturers already know the background, the data and the general methodology. Your report therefore does not need to include an introduction on the clinical problem nor explanations of the background of image
+registration. You do have to include your design choices and motivation thereof.</p>
+<p>Aim to present your most important findings in the main body of the report and (if needed) any additional information in an appendix. The following report structure is suggested for the main body of the report:</p>
+<ol class="arabic simple">
+<li><p>Introduce research question and hypothesis with its motivation (0.5 page)</p></li>
+<li><p>Study design: which data did you use, what are the requirements of your method, why did you make certain choices. Be as complete as possible w.r.t. the components of a study design. (0.5 page)</p></li>
+<li><p>Method, experiments and results for each research question (2 pages)</p></li>
+<li><p>Discussion section with analysis of the results. (1 page)</p></li>
+<li><p>Contributions: a brief description by each group member of their activities in the project which can be used to to adjust individual grades to reflect a student’s (lack of) contribution to the group</p></li>
+<li><p>If you use large language models (such as ChatGPT) in your course work, you are required to declare how and for what they were used and to include a reflection on the use of such tools.</p></li>
+</ol>
+<p>The page lengths above are indications. You are free to adapt them, with the constraint of a maximum length of five pages for the first four items listed.</p>
+<p>The report must be submitted as a single PDF file. The documented code must be submitted as a single archive file (e.g. zip or 7z) that is self-contained and can be used to reproduce the results in the report.</p>
+<p>Note that there is no single correct solution for the project. You have to demonstrate to the reader that you understand the methods that you have studied and can critically analyze the results of applying the methods. Below, you can find a set of assignments (guided project work) that will help you get started with the project work and, when correctly completed, will present you with a <strong>minimal solution</strong>. Solutions which go beyond these assignments are of course encouraged. Additionally,
+include the solutions to the preliminary guided project work within this notebook in the archive file.</p>
+</section>
+<section id="Assessment">
+<h2>Assessment<a class="headerlink" href="#Assessment" title="Link to this heading"></a></h2>
+<p>The rubric that will be used for assessment of the project work is given in <a class="reference external" href="https://github.com/tueimage/8BE030-MIA/blob/master/rubric.md">this table</a>. Please</p>
+</section>
+<section id="Preliminary-guided-project-work">
+<h2>Preliminary guided project work<a class="headerlink" href="#Preliminary-guided-project-work" title="Link to this heading"></a></h2>
+<section id="1.-Creating-datasets">
+<h3>1. Creating datasets<a class="headerlink" href="#1.-Creating-datasets" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Create a dataset for all the images, but where the labels are based on a different task: white matter vs gray matter vs cerebrospinal fluid.</p></li>
+<li><p>Implement the missing functionality in <code class="docutils literal notranslate"><span class="pre">extract_features</span></code>. The final result should extract 5-10 features that you tried in the exercises, or created yourself, for a particular subject and slice.</p></li>
+<li><p>Examine the (already implemented, but you might need to modify the location of the images it loads) function <code class="docutils literal notranslate"><span class="pre">create_dataset</span></code> which extracts the features for a several subjects and/or slices, and creates the labels (either for the brain/not brain task, or the tissue classification task). Create one training dataset for the tissue classification task.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">scatter_data</span></code> to look at the features you have. You can also look at PCA or subsets of the features. What can you say about the features?</p></li>
+<li><p>In principle any type of processing you can apply to the image can be used to create more features. For example, if you enhance edges in the image, you can create a feature that provides information about whether that pixel is part of an edge or not. Think about the image processing techniques you learnt about in <strong>8BB050</strong> (for example, boundary extraction) and invent a new feature to add to your dataset. Implement it in a new function, for example <code class="docutils literal notranslate"><span class="pre">extract_myfeature</span></code> that has the image as
+input, and the feature vector as output.</p>
+<p>You should aim for your feature to be different (not perfectly correlated) from the ones you already have. Note that you cannot use the ground-truth image to create features - you want to be able to extract the feature, even if ground truth is not available.</p>
+<p>Your answer should include a description of the feature, the code to extract it, and a demonstration that shows it is different from the features you already have.</p>
+</li>
+</ol>
+</section>
+<section id="2.-Model-selection-and-generalization">
+<h3>2. Model selection and generalization<a class="headerlink" href="#2.-Model-selection-and-generalization" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">create_dataset</span></code> function to create a training set and a test set for the tissue segmentation task. Use the same slice, but different subjects for training and testing.</p></li>
+<li><p>Use these datasets to investigate using different features and different segmentation methods. You can use both classification error and dice overlap for evaluation, but since now there are four different classes (three tissues and background, you will need to use <code class="docutils literal notranslate"><span class="pre">dice_multiclass</span></code>.</p>
+<p>How do you decide what good choices are? Document this process in a function you create yourself, which returns the best choices given two different subjects.</p>
+</li>
+<li><p>Repeat the above, but use a different subject for testing. Do your conclusions change or stay the same, why? What if you vary the slices?</p></li>
+</ol>
+</section>
+<section id="3.-Combining-different-methods">
+<h3>3. Combining different methods<a class="headerlink" href="#3.-Combining-different-methods" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Try the function <code class="docutils literal notranslate"><span class="pre">segmentation_combined_knn</span></code> on the tissue segmentation task (do not forget to combine the labels - look into e.g. majority voting).</p></li>
+<li><p>Design a method that combines (some) other methods you have learnt so far in <code class="docutils literal notranslate"><span class="pre">segmentation_mymethod</span></code>. Provide a motivation (based on what you know about the methods) of the choices that you made.</p></li>
+<li><p>The script <code class="docutils literal notranslate"><span class="pre">segmentation_demo</span></code>, creates the results for several methods. This code is a bit slow, so it is not recommended to run it multiple times. (Also, you should not use all of these results to improve your method, since that means you are using the test data as the training data :) ).</p></li>
+<li><p>Run the script and look at the results. How does your method compare to the individual results? It is not required here that your method is always better! For example, you could select a subject where your method is the best, and a subject where your method is the worst, and explain what is happening in the images.</p></li>
+<li><p>Discuss what other (combinations) methods could be suitable or not suitable for the task and why.</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_project</span><span class="w"> </span><span class="kn">import</span> <span class="n">segmentation_demo</span>
+<span class="n">segmentation_demo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ModuleNotFoundError</span>                       Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[2]</span><span class="ansi-green-fg">, line 4</span>
+<span class="ansi-green-fg">      1</span> get_ipython().run_line_magic(<span class="ansi-yellow-fg">&#39;matplotlib&#39;</span>, <span class="ansi-yellow-fg">&#39;inline&#39;</span>)
+<span class="ansi-green-fg">      2</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> sys
+<span class="ansi-green-fg">      3</span> sys.path.append(<span class="ansi-yellow-fg">&#34;../code&#34;</span>)
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> segmentation_project <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> segmentation_demo
+<span class="ansi-green-fg">      5</span> segmentation_demo()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\segmentation_project.py:6</span>
+<span class="ansi-green-fg">      1</span> <span class="ansi-yellow-fg">&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">      2</span> <span class="ansi-yellow-fg">Project code+scripts for 8DC00 course</span>
+<span class="ansi-green-fg">      3</span> <span class="ansi-yellow-fg">&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">      5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">numpy</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">as</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">np</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">6</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">utilities</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">as</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">util</span>
+<span class="ansi-green-fg">      7</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">matplotlib</span><span class="ansi-blue-intense-fg ansi-bold">.</span><span class="ansi-blue-intense-fg ansi-bold">pyplot</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">as</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">plt</span>
+<span class="ansi-green-fg">      8</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">segmentation</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">as</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">seg</span>
+
+<span class="ansi-red-fg">ModuleNotFoundError</span>: No module named &#39;utilities&#39;
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Open-ended-project-work">
+<h2>Open-ended project work<a class="headerlink" href="#Open-ended-project-work" title="Link to this heading"></a></h2>
+<p>Define and motivate one research question that you will investigate. This can be a question relating to a method (e.g. what is the impact of X on a particular method) or relating to the problem (e.g. does a specific method fail in specific cases). It can be based on what you have done above or take another direction. It is recommended to get feedback on your research question from the teaching assistants.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="2.5_active_shape_models.html" class="btn btn-neutral float-left" title="Topic 2.5: Active shape models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

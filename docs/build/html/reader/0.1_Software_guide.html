@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help for Jupyter and Python &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 1.1: Geometrical transformations" href="1.1_Geometrical_transformations.html" />
+    <link rel="prev" title="Medical Image Analysis (8BE030) documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Help for Jupyter and Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1-Python-programming-skills">1 Python programming skills</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.1-Python-installation-and-configuration">1.1 Python installation and configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#1.2-Using-Python-terminal,-setting-up-a-Python-environment">1.2 Using Python terminal, setting up a Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#1.3-Implementation-of-basic-engineering-and-mathematical-techniques">1.3 Implementation of basic engineering and mathematical techniques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#1.4-How-to-efficiently-search-for-solutions-to-Python-errors">1.4 How to efficiently search for solutions to Python errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Jupyter-notebook-workflow">2. Jupyter notebook workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#2.1-General-information-about-notebooks">2.1 General information about notebooks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Getting-started-with-Jupyter">Getting started with Jupyter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Digital-reader">Digital reader</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Code-and-data-repository-structure">Code and data repository structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Exercises-on-image-registration">Exercises on image registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Exercises-on-computer-aided-diagnostics-and-neural-networks">Exercises on computer-aided diagnostics and neural networks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Notation">Notation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Activity-icons">Activity icons</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2.2-User-interface-and-useful-commands-in-Jupyter-notebooks">2.2 User interface and useful commands in Jupyter notebooks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.3-Debugging-and-editing-your-Python-code-directly-in-Jupyter-notebook">2.3 Debugging and editing your Python code directly in Jupyter notebook</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Cell-execution-history">Cell execution history</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Autoreload">Autoreload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#%debug-and-the-IPython-debugger">%debug and the IPython debugger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#JupyterLab-extensions">JupyterLab extensions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Help for Jupyter and Python</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/0.1_Software_guide.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Help-for-Jupyter-and-Python">
+<h1>Help for Jupyter and Python<a class="headerlink" href="#Help-for-Jupyter-and-Python" title="Link to this heading"></a></h1>
+<p><strong>Read the following sections carefully before you start working on the notebooks.</strong></p>
+<p>The first part of this notebook provides an explanation of the fundamental steps for installing your Python distributor, configuring your Python environment, and using basic Python commands. It will also give you important information on how to debug your code in case something does not work as expected. The second part describes the general setup of all notebooks, teaches you how to work with Jupyter and how to quickly and efficiently solve problems while doing the exercises.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic">
+<li><p>Python programming skills</p>
+<p>1.1 Python installation and configuration</p>
+<p>1.2 Using Python terminal, setting up a Python environment</p>
+<p>1.3 Implementation of basic engineering and mathematical techniques</p>
+<p>1.4 How to efficiently search for solutions to Python errors</p>
+</li>
+<li><p>Jupyter notebook workflow</p>
+<p>2.1 General information about notebooks</p>
+<p>2.2 User interface and useful commands in Jupyter notebooks</p>
+<p>2.3 Debugging and editing your Python code directly in Jupyter notebook</p>
+</li>
+</ol>
+<div id="prog_skills"></div><section id="1-Python-programming-skills">
+<h2>1 Python programming skills<a class="headerlink" href="#1-Python-programming-skills" title="Link to this heading"></a></h2>
+<div id="py_install"></div><p>In this course, we will be working with Anaconda (a Python distribution platform). The following instructions give an overview of essential steps prior to using Jupyter notebooks on Windows.</p>
+<section id="1.1-Python-installation-and-configuration">
+<h3>1.1 Python installation and configuration<a class="headerlink" href="#1.1-Python-installation-and-configuration" title="Link to this heading"></a></h3>
+<p>Here is how to install your Python distribution platform:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://www.anaconda.com/products/individual">Download</a> and install Anaconda (it automatically comes with the latest Python version)</p></li>
+<li><p>Follow the instructions in the dialog window. Make sure to check the box <strong>Add Anaconda to my PATH environment variable</strong> in order to be able to use Jupyter notebooks.</p></li>
+<li><p>Installation will follow</p></li>
+<li><p>To check whether the path to Anaconda has been added to your environment variables, go to <em>Edit the system environment variables</em> in the start menu, and click the <em>Environment Variables</em> button in the dialogue window.</p></li>
+</ol>
+<div id="py_terminal"></div></section>
+<section id="1.2-Using-Python-terminal,-setting-up-a-Python-environment">
+<h3>1.2 Using Python terminal, setting up a Python environment<a class="headerlink" href="#1.2-Using-Python-terminal,-setting-up-a-Python-environment" title="Link to this heading"></a></h3>
+<p>To progress efficiently in this course, you will need to install additional Python packages that are not included in the basic Anaconda Python distribution. It is recommended to install these packages in a dedicated Python environment. A Conda environment is a directory in which you can install files and packages such that their dependencies will not interact with other environments, which is very useful if you develop code for different courses or research projects. These packages can either be
+installed using a conda .yml file or manually using the <code class="docutils literal notranslate"><span class="pre">conda</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pip</span></code> package managers. To run the complete development environment for this course, you need to install six additional Python packages: <code class="docutils literal notranslate"><span class="pre">jupyter,</span> <span class="pre">matplotlib,</span> <span class="pre">numpy,</span> <span class="pre">scikit-learn,</span> <span class="pre">scipy</span> <span class="pre">and</span> <span class="pre">spyder</span></code> (spyder is optional).</p>
+<ol class="arabic simple">
+<li><p>Open the Anaconda terminal from the Start menu on Windows</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment: In (Anaconda) command prompt, write <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">--name</span> <span class="pre">myenv</span></code> (to create an environment with a specific Python version, specify the version at the end of this command line <code class="docutils literal notranslate"><span class="pre">python=3.13</span></code>; and to add specific packages to the environment, specify them afterwards in the same command line, e.g. <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">myenv</span> <span class="pre">python=3.13</span> <span class="pre">scipy=0.15.0</span> <span class="pre">numpy</span> <span class="pre">nibabel</span></code>). Check the <a class="reference external" href="https://github.com/tueimage/8be030-mia/blob/master/requirements.txt">requirements file</a>
+for the package versions you need to install.</p></li>
+</ol>
+<p>Here is an example you can follow for this course:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>8be030<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13<span class="w">                      </span><span class="c1"># create a new environment called `8be030`</span>
+conda<span class="w"> </span>activate<span class="w"> </span>8be030<span class="w">                                       </span><span class="c1"># activate this environment</span>
+pip<span class="w"> </span>install<span class="w"> </span>matplotlib<span class="w"> </span>jupyter<span class="w"> </span>numpy<span class="w"> </span>scikit-learn<span class="w"> </span>scipy<span class="w">     </span><span class="c1"># install the required packages</span>
+</pre></div>
+</div>
+<p>Using both ways, the default destination folder for your newly created Python environment will be in <code class="docutils literal notranslate"><span class="pre">C:\path-to-anaconda\envs\myenv</span></code>. <strong>Note!</strong> You have to activate the <code class="docutils literal notranslate"><span class="pre">8be030</span></code> environment every time you start working on the assignments (<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">8be030</span></code>).</p>
+<div id="basic_imp_eng_math"></div></section>
+<section id="1.3-Implementation-of-basic-engineering-and-mathematical-techniques">
+<h3>1.3 Implementation of basic engineering and mathematical techniques<a class="headerlink" href="#1.3-Implementation-of-basic-engineering-and-mathematical-techniques" title="Link to this heading"></a></h3>
+<p>Best way to learn the basics of programming is to study Python essentials in the <a class="reference external" href="https://github.com/tueimage/essential-skills/blob/master/python-essentials.md">Essential Skills</a> notebook of the course. Additionally, a comprehensive reference book with examples on applying mathematical models as well as machine learning in Python can be found in the book <a class="reference external" href="https://www.halvorsen.blog/documents/programming/python/resources/Python%20for%20Science%20and%20Engineering.pdf">Python for Science and
+Engineering</a> by Hans-Peter Halvorsen.</p>
+<div id="jn_error_search"></div></section>
+<section id="1.4-How-to-efficiently-search-for-solutions-to-Python-errors">
+<h3>1.4 How to efficiently search for solutions to Python errors<a class="headerlink" href="#1.4-How-to-efficiently-search-for-solutions-to-Python-errors" title="Link to this heading"></a></h3>
+<p>Code bugs, glitches and unexpected behavior occur frequently whenever you develop code snippets, test your implementation or integrate your solution into someone else’s code. What is usually time-consuming and demotivating for students, is searching for solutions to Python errors that may show an utterly confusing explanation on the screen. You copy the error text, open your browser, paste it, and a long list of sometimes completely unrelated solutions is thrown in front of you. Yes, this can be
+very frustrating.</p>
+<p>The good news is that errors in Python have a very specific form, called a <em>traceback</em>. Though intimidating at times, tracebacks inform you broadly about what went wrong in your program, including indication of the line of code where the error ocurred and what type of error it was. Tracebacks may have multiple levels (reaching up to 20 levels deep!), which results in long error messages. Note however, that the length of these error statements does not reflect the severity of the problem as the
+messages contain all functions that were called upon before the error was encountered. You will typically find the error at the bottom of the traceback messages. Most commonly seen tracebacks include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SyntaxError</span></code> (describes a “grammar” issue related to the syntax of the program)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IndentationError</span></code> (is related to how your code is indented)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NameError</span></code> (shows up when a variable definition is missing, does not exist, or its name is misspelt)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IndexError</span></code> (Python indexing starts at <span class="math notranslate nohighlight">\(0\)</span>; this error occurs when you try to wrongly access list or array elements)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FileNotFoundError</span></code> (occurs when the file you aim to read is not found in the given destination on your disk)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IOError</span></code> (appears when you are trying to read a file that is open for writing or vice versa)</p></li>
+</ul>
+<p>You may find examples of traceback errors on this <a class="reference external" href="https://swcarpentry.github.io/python-novice-inflammation/09-errors/index.html">educational website on errors and exceptions in Python</a>.</p>
+<p>Sometimes you are referred to the documentation pages of a certain library, where it is clearly described how to use a function, and how to fill in its mandatory input parameters. Check for example the <a class="reference external" href="https://numpy.org/doc/">numpy documentation</a> to understand the structure of documenting Python libraries. Apart from documentation resources, probably the most comprehensive repository of various hacks, solutions, workarounds and tips for programmers can be found on <a class="reference external" href="https://stackoverflow.com/">Stack
+Overflow</a>, where enthusiastic programmers post solutions to miscellaneous problems and glitches found in codes of users from all around the globe. If you still cannot find your solution, post your question on Stack Overflow, and an answer will be available for you soon.</p>
+<p>Although Google is a friendly debugging assistant (and some programmers have learnt a programming language on a simple trial-error basis), prevention in programming is key to obtaining a functional code. General advice is to program defensively, i.e. assume errors will arise and write test code first to detect problems in an early stage. Small tests with pre- and postconditions will help you determine what the code is supposed to eventually do.</p>
+<div id="jn_workflow"></div></section>
+</section>
+<section id="2.-Jupyter-notebook-workflow">
+<h2>2. Jupyter notebook workflow<a class="headerlink" href="#2.-Jupyter-notebook-workflow" title="Link to this heading"></a></h2>
+<div id="jn_general"></div><section id="2.1-General-information-about-notebooks">
+<h3>2.1 General information about notebooks<a class="headerlink" href="#2.1-General-information-about-notebooks" title="Link to this heading"></a></h3>
+<section id="Getting-started-with-Jupyter">
+<h4>Getting started with Jupyter<a class="headerlink" href="#Getting-started-with-Jupyter" title="Link to this heading"></a></h4>
+<p>We recommend using <em>Jupyter Notebook</em> to follow the exercises and run the example code (also see the <a class="reference external" href="https://github.com/tueimage/essential-skills">Essential Skills</a> module). An alternative is <a class="reference external" href="https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html">Jupyter Lab</a> which has a bit more advanced functionality that some might find useful. It is best if you change the directory to the directory containing the code before starting Jupyter Notebook. Similarly, you can start
+the integrated development environment <em>Spyder</em> by typing <code class="docutils literal notranslate"><span class="pre">spyder</span></code> in the Anaconda Prompt.</p>
+<p>To open a Jupyter notebook editor, you have several options:</p>
+<ol class="arabic simple">
+<li><p>Open Anaconda Navigator (may take some time to open), and launch Jupyter</p></li>
+<li><p>Open a Windows command prompt / Windows Powershell, and type <code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code> (note the space in between); this way will only work if you have added Anaconda to your Path</p></li>
+</ol>
+</section>
+<section id="Digital-reader">
+<h4>Digital reader<a class="headerlink" href="#Digital-reader" title="Link to this heading"></a></h4>
+<p>For a quicker view of all Jupyter noteboooks you will be working on in this course, we have prepared an online reader <a class="reference external" href="https://8be030-mia-docs.readthedocs.io/en/latest/">8be030-website</a>, which gives you the option to study the notebooks before opening them locally in your Jupyter environment. The reader also allows for an easy access to study all notebooks without the need for launching any interactive environment. This will especially be useful in your preparation for the final exam.</p>
+</section>
+<section id="Code-and-data-repository-structure">
+<h4>Code and data repository structure<a class="headerlink" href="#Code-and-data-repository-structure" title="Link to this heading"></a></h4>
+<p>To get started, you have to save the course’s GitHub repository to your local machine (either as a ZIP archive or by running the command <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">&lt;link_to_repository&gt;</span></code>), say into a folder named <code class="docutils literal notranslate"><span class="pre">8BE030</span></code> on your machine. Once downloaded or cloned, you will see the following folder and file structure:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>8BE030
+.
+<span class="p">|</span>____code
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____registration.py
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____registration_tests.py
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____registration_util.py
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____registration_project.py
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____...
+<span class="p">|</span>____data
+<span class="p">|</span>____reader
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____0.1_Software_guide.ipynb
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____1.1_Geometrical_transformations.ipynb
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____1.2_Point-based_registration.ipynb
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>____...
+<span class="p">|</span>____README.md
+<span class="p">|</span>____requirements.txt
+</pre></div>
+</div>
+<p>The code for this course is organised in Python modules per topic (e.g. <code class="docutils literal notranslate"><span class="pre">registration.py</span></code>) stored in the <code class="docutils literal notranslate"><span class="pre">code</span></code> folder, each containing the Python functions (either complete or to be completed by you) particular to the topic of the exercise. These modules are referred to from the relevant Jupyter notebooks.</p>
+<p>The testing functions (e.g. <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code>) can be used validate the code that you developed. These functions are often already called from within the Jupyter notebooks, although some of these tests might fail if they do not yet contain completed code. Helper functions are provided in modules ending with <code class="docutils literal notranslate"><span class="pre">_util.py</span></code>.</p>
+<p>The Jupter notebooks in the <code class="docutils literal notranslate"><span class="pre">reader</span></code> folder contain all exercise and project instructions, mostly structured according to a narrative interspersed with code snippets and example figures. The <a class="reference external" href="https://github.com/tueimage/8be030-mia/blob/master/README.md">README</a> provides the order (with links) in which the exercises can be followed.</p>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">data</span></code> folder contains all of the data necessary to complete the exercises and projects. Hardcoded filenames in the <code class="docutils literal notranslate"><span class="pre">_tests.py</span></code> modules are referenced to the <code class="docutils literal notranslate"><span class="pre">8BE030</span></code> folder. You might have to change these filenames if you program and run your code from outside the notebooks.</p>
+</section>
+<section id="Exercises-on-image-registration">
+<h4>Exercises on image registration<a class="headerlink" href="#Exercises-on-image-registration" title="Link to this heading"></a></h4>
+<p>In this set of exercises, you will first implement Python definitions for computing transformation matrices for different geometrical transformations. Then, you will implement code for converting a transformation matrix into a homogeneous form. All information needed for implementing these functions can be found in corresponding lecture slides and/or previous parts of this notebook. In the beginning, you will apply the transformations to geometric objects, however, the same functions will be
+later used for image transformation.</p>
+</section>
+<section id="Exercises-on-computer-aided-diagnostics-and-neural-networks">
+<h4>Exercises on computer-aided diagnostics and neural networks<a class="headerlink" href="#Exercises-on-computer-aided-diagnostics-and-neural-networks" title="Link to this heading"></a></h4>
+<p>In this set of exercises, you will implement linear regression and logistic regression methods, apply them to simplistic datasets and then evaluate and analyze the results. As with the other sets of exercises, the goal is to help you better study and understand the material and lay down the ground work for the corresponding mini-project. You should not wait to complete all exercises before moving to work on the project. For example, after completing the exercises on linear regression, you can
+already start with the linear regression experiments required for the project work.</p>
+</section>
+<section id="Notation">
+<h4>Notation<a class="headerlink" href="#Notation" title="Link to this heading"></a></h4>
+<p>Vectors and matrices are represented by a bold typeface, matrices with uppercase and vectors with lowercase letters, e.g. the matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, the vector <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> etc. Compare this with the notation for scalars: <span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(w\)</span>. In-line Python function (i.e. definition) names, commands, files and variables are represented in a highlighted monospace font, e.g. <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">w</span></code>, <code class="docutils literal notranslate"><span class="pre">imshow(I)</span></code>, <code class="docutils literal notranslate"><span class="pre">some_python_definition()</span></code>, <code class="docutils literal notranslate"><span class="pre">some_file.py</span></code> etc.</p>
+</section>
+<section id="Activity-icons">
+<h4>Activity icons<a class="headerlink" href="#Activity-icons" title="Link to this heading"></a></h4>
+<p>To help you understand what is expected from you in different parts of the notebooks, we have incorporated the following activity icons (top-down: STUDY, IMPLEMENT/TEST, ANSWER):</p>
+<div style="float:center;margin:5px 15px"><p><img alt="36d5a7843193448593dea4ad57981cdb" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><div style="float:center;margin:5px 15px"><p><img alt="b516e61ff54c4acbb5f08537d29fa280" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div><div style="float:center;margin:5px 15px"><p><img alt="ea42c34472a14d9b8da444aa2c352c02" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div><div id="jn_ui"></div></section>
+</section>
+<section id="2.2-User-interface-and-useful-commands-in-Jupyter-notebooks">
+<h3>2.2 User interface and useful commands in Jupyter notebooks<a class="headerlink" href="#2.2-User-interface-and-useful-commands-in-Jupyter-notebooks" title="Link to this heading"></a></h3>
+<p>Jupyter notebooks is an interactive computing environment. There is a comprehensive documentation describing the <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/notebook.html">Notebook Basics</a>, where you can learn about what happens when you first start the Jupyter notebook server and the dashboard appears in front of you. When working with the notebooks in this course, you will see the <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/ui_components.html">User Interface</a> which allows
+you to run code, work on exercises and answer questions interactively. Instead of using the UI buttons and interactive tools, you may prefer to use keyboard commands optimized for efficient work with the notebooks. Here are a couple of most useful commands you may find useful in this course:</p>
+<ul class="simple">
+<li><p>Basic navigation: <code class="docutils literal notranslate"><span class="pre">Enter</span></code> (enter edit mode), <code class="docutils literal notranslate"><span class="pre">Esc</span></code> (enter command mode), <code class="docutils literal notranslate"><span class="pre">Shift-Enter</span></code> (confirm editing)</p></li>
+<li><p>Saving notebooks: <code class="docutils literal notranslate"><span class="pre">s</span></code> (save)</p></li>
+<li><p>Change cell types: <code class="docutils literal notranslate"><span class="pre">m</span></code> (markdown), <code class="docutils literal notranslate"><span class="pre">y</span></code> (code)</p></li>
+<li><p>Cell creation: <code class="docutils literal notranslate"><span class="pre">a</span></code> (add cell above), <code class="docutils literal notranslate"><span class="pre">b</span></code> (add cell below)</p></li>
+<li><p>Cell editing: <code class="docutils literal notranslate"><span class="pre">c</span></code> (copy cell), <code class="docutils literal notranslate"><span class="pre">v</span></code> (paste cell), <code class="docutils literal notranslate"><span class="pre">d,</span> <span class="pre">d</span></code> (delete cell), <code class="docutils literal notranslate"><span class="pre">z</span></code> (undo deletion), <code class="docutils literal notranslate"><span class="pre">x</span></code> (cut cell)</p></li>
+</ul>
+<p><strong>Note!</strong> It may well be that you cannot view Jupyter notebooks on the GitHub webpage correctly. Therefore, it is essential that you clone the GitHub repository to your local folder (free to choose by yourself), and work locally.</p>
+<div id="jn_debugging"></div></section>
+<section id="2.3-Debugging-and-editing-your-Python-code-directly-in-Jupyter-notebook">
+<h3>2.3 Debugging and editing your Python code directly in Jupyter notebook<a class="headerlink" href="#2.3-Debugging-and-editing-your-Python-code-directly-in-Jupyter-notebook" title="Link to this heading"></a></h3>
+<p>Editing code directly in Jupyter, which offers no linking, auto-complete or other comforts of a decent editor, might sometimes be difficult. There are several open-source Integrated Development Environments (IDEs) enabling fast and efficient software development, code editing and debugging. Examples of these tools are <a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>, <a class="reference external" href="https://code.visualstudio.com/?wt.mc_id=DX_841432">MS Visual Studio Code</a> or <a class="reference external" href="https://www.sublimetext.com/">Sublime Text</a>,
+to name some. On the bright side, such code editors offer miscellaneous utilities, such as auto-complete, suggestions for code enhancements, automatic installation of missing Python libraries, etc. While all these features make it much easier to develop your functionalities, setting up an IDE might be cumbersome, especially if you have never worked with any code editing software before. Eventually, these IDEs yield larger benefits when working on extensive projects that entail much more code
+writing, integration, and testing compared with what is necessary in this course.</p>
+<p>While working on your notebooks, unexpected events may occur. If so, the first aid for you may be the documentation page <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/troubleshooting.html">What to do when things go wrong</a> describing how to proceed when Jupyter fails to start, your kernel cannot be launched, a notebook does not load or does not work in a browser.</p>
+<p>Therefore, it is essential you learn how to debug and edit your Python code directly in Jupyter notebooks (in a web browser). You can do so by making use of the so-called <strong>magic commands</strong>. Magic commands are IPython kernel enhancements of the normal Python code, dedicated to problem solving. An extensive list of magic commands with examples of their use can be found on the website called <a class="reference external" href="https://www.dataquest.io/blog/jupyter-notebook-tips-tricks-shortcuts/">28 Jupyter Notebook Tips and
+Tricks</a>. Below, we will mention some of those magic commands which you will see in the Jupyter notebooks of this course.</p>
+<section id="Cell-execution-history">
+<h4>Cell execution history<a class="headerlink" href="#Cell-execution-history" title="Link to this heading"></a></h4>
+<p>As long as your Python kernel is active, there is an input history logging the code execution of each cell. This comes in handy when you have accidentally deleted a cell.</p>
+</section>
+<section id="Autoreload">
+<h4>Autoreload<a class="headerlink" href="#Autoreload" title="Link to this heading"></a></h4>
+<p>The notebook typically needs to be restarted whenever you edit the code of an already imported module or package. To avoid making it tedious, we use the following two magic commands:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>%load_ext autoreload
+%autoreload 2
+</pre></div>
+</div>
+</section>
+<section id="%debug-and-the-IPython-debugger">
+<h4>%debug and the IPython debugger<a class="headerlink" href="#%debug-and-the-IPython-debugger" title="Link to this heading"></a></h4>
+<p>For debugging, you can use the <code class="docutils literal notranslate"><span class="pre">%debug</span></code> command. Whenever you encounter an error or exception, just open a new notebook cell, type %debug and run the cell. Then, a command line will be opened, where you can perform code testing and inspect all variables up to the line which triggered the error. Type <code class="docutils literal notranslate"><span class="pre">n</span></code> and hit <code class="docutils literal notranslate"><span class="pre">Enter</span></code> to run the next line of code (The <code class="docutils literal notranslate"><span class="pre">→</span></code> arrow shows you the current position). Use <code class="docutils literal notranslate"><span class="pre">c</span></code> to continue until the next breakpoint. <code class="docutils literal notranslate"><span class="pre">q</span></code> quits the debugger and code execution.</p>
+<center width="100%"><p><img alt="e5d8c2cf32d446358fbd959bf753001f" class="no-scaled-link" src="../_images/debugging_1.png" width="400" /></p>
+</center><p>Another option is to make use of the IPython debugger library. Import the library as set_trace (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">IPython.core.debugger</span> <span class="pre">import</span> <span class="pre">set_trace</span></code>) and use the <code class="docutils literal notranslate"><span class="pre">set_trace()</span></code> in any code cell of your notebook to create one or more breakpoints. Executed cell will stop evaluating code at the first breakpoint and open a command line for detailed inspection. In case any of your imported modules or functions do not work, you may also deploy the debugger there.</p>
+<center width="100%"><p><img alt="658abff4c7f84280837e2b2f27c96ee8" class="no-scaled-link" src="../_images/debugging_2.png" width="400" /></p>
+</center></section>
+<section id="JupyterLab-extensions">
+<h4>JupyterLab extensions<a class="headerlink" href="#JupyterLab-extensions" title="Link to this heading"></a></h4>
+<p>The Jupyter project is under constant development and a plethora of extensions for the user interface including more notebooks viewers have been available as <a class="reference external" href="https://jupyterlab.readthedocs.io/en/stable/user/extensions.html">JupyterLab extensions</a>. Among the various tools JupyterLab offers, advanced debugging functionalities may come in handy. Nevertheless, these additional Jupyter API enhancers are absolutely not mandatory to install for the purpose of our course.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Medical Image Analysis (8BE030) documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="1.1_Geometrical_transformations.html" class="btn btn-neutral float-right" title="Topic 1.1: Geometrical transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

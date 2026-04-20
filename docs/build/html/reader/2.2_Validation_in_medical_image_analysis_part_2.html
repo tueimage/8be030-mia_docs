@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 2.2: Validation in medical image analysis (Segmentation) &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 2.3: Segmentation in feature space" href="2.3_segmentation_in_feature_space.html" />
+    <link rel="prev" title="Topic 2.1: Exercises - Image segmentation" href="2.1_segmentation_introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 2.2: Validation in medical image analysis (Segmentation)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Validation-(concepts)">1. Validation (concepts)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.1-Quality-characteristics">1.1 Quality characteristics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Accuracy-(bias)">Accuracy (bias)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Precision-(variation),-reproducibility,-reliability,-replicability">Precision (variation), reproducibility, reliability, replicability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Robustness">Robustness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Efficiency">Efficiency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Fault-detection">Fault detection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#1.3-Measures-of-quality">1.3 Measures of quality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Segmentation---quality-measures">Segmentation - quality measures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Common-limitations-of-performance-metrics-used-for-segmentation-tasks">2. Common limitations of performance metrics used for segmentation tasks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Small-structures">Small structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Image-artifacts">Image artifacts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Overlap-measurements">Overlap measurements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Over--and-undersegmentation">Over- and undersegmentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Single-object-bias">Single object bias</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Metric-combination">Metric combination</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Choosing-the-right-metric-for-a-given-task">Choosing the right metric for a given task</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1:"><em>Question 1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2:"><em>Question 2</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-3:"><em>Question 3</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-4:"><em>Question 4</em>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 2.2: Validation in medical image analysis (Segmentation)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/2.2_Validation_in_medical_image_analysis_part_2.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Topic-2.2:-Validation-in-medical-image-analysis-(Segmentation)">
+<h1>Topic 2.2: Validation in medical image analysis (Segmentation)<a class="headerlink" href="#Topic-2.2:-Validation-in-medical-image-analysis-(Segmentation)" title="Link to this heading"></a></h1>
+<p>This notebook combines theory with questions to support the understanding of validation metrics in medical image analysis. Use available markdown sections to fill in your answers to questions as you proceed through the notebook.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic">
+<li><p>Validation (concepts)</p>
+<p>1.1 Quality characteristics</p>
+<ul class="simple">
+<li><p>Accuracy (bias)</p></li>
+<li><p>Precision (variation), reproducibility, reliability, replicability</p></li>
+<li><p><a class="reference internal" href="#Robustness"><span class="std std-ref">Robustness</span></a></p></li>
+<li><p><a class="reference internal" href="#Efficiency"><span class="std std-ref">Efficiency</span></a></p></li>
+<li><p>Fault detection</p></li>
+</ul>
+<p>1.3 Measures of quality</p>
+<ul class="simple">
+<li><p>Segmentation - quality measures</p></li>
+</ul>
+</li>
+<li><p>Common limitations of performance metrics in biomedical image analysis</p>
+<ul class="simple">
+<li><p>Small structures</p></li>
+<li><p>Image artifacts</p></li>
+<li><p>Overlap measurements</p></li>
+<li><p>Over- and undersegmentation</p></li>
+<li><p>Single-object bias</p></li>
+<li><p>Metric combination</p></li>
+<li><p>Choosing the right metric for a given task</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>References:</strong></p>
+<p>[1] Measures of quality: <a class="reference external" href="https://link.springer.com/book/10.1007/978-1-4471-2751-2">Toennies Klaus, D. Guide to Medical Image Analysis - Methods and Algorithms, Chapter 13.1</a></p>
+<p>[2] Ground truth: <a class="reference external" href="https://link.springer.com/book/10.1007/978-1-4471-2751-2">Toennies Klaus, D. Guide to Medical Image Analysis - Methods and Algorithms, Chapter 13.2</a></p>
+<p>[3] Limitations of performance metrics: <a class="reference external" href="https://arxiv.org/abs/2104.05642">Reinke et al. Common Limitations of Image Processing Metrics: A Picture Story.</a></p>
+<p>[4] Assessment of registration errors: <a class="reference external" href="https://spie.org/Publications/Proceedings/Paper/10.1117/12.813601">Fitzpatrick, M. Visualization, Image-Guided Procedures and Modeling, 7261:1–12, SPIE Medical Imaging (2009).</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div id="validation"></div><div style="float:right;margin:-5px 5px"><p><img alt="d52ae2f81f794e1f97aa54f43014a4f5" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="1.-Validation-(concepts)">
+<h2>1. Validation (concepts)<a class="headerlink" href="#1.-Validation-(concepts)" title="Link to this heading"></a></h2>
+<p>Validation of medical image analysis methods is the estimation of correctness of certain results from tests of a method on a representative sample set. In e.g. software design, validation is the evaluation of the degree to which user needs (performance requirements) are met, i.e. whether the right software is being built. In medical image analysis, we usually talk about technical validation, where the aim is to evaluate the performance of computing algorithms with respect to e.g. segmentation
+accuracy. Validation is used in various image computing classes (registration, segmentation, detection, classification, quantification).</p>
+<p>Prior to performing validation, suitable data needs to be selected, comparison measures need to be chosen, and a norm (e.g. ground-truth, explained below) needs to be defined. <strong>Remember that every validation study must have a hypothesis on performance (e.g. outcome is better than…), and a ground truth (gold standard) is essential</strong>. Validation can provide information about our method with respect to another method used to generate the same results (cross-validation). It is
+mandatory to document a detailed description of the validation procedure together with a well-founded justification of selected measures, as it allows potential new users of the method to investigate the validity of the arguments used to build the validation scenario.</p>
+<div id="quality_characteristics"></div><section id="1.1-Quality-characteristics">
+<h3>1.1 Quality characteristics<a class="headerlink" href="#1.1-Quality-characteristics" title="Link to this heading"></a></h3>
+<p>There are a number of quality characteristics used in validation of medical image analysis methods:</p>
+<div id="accuracy"></div><section id="Accuracy-(bias)">
+<h4>Accuracy (bias)<a class="headerlink" href="#Accuracy-(bias)" title="Link to this heading"></a></h4>
+<p>Accuracy determines the deviation of results from known ground truth. It is computed via a measure of quality (section 1.3) comparing results with some norm. Accuracy is calculated as the ratio between true/false positives and negatives: <span class="math notranslate nohighlight">\(\mathrm{A} = \frac{(\mathrm{TP + TN})}{(\mathrm{TP+FP+FN+TN})}\)</span>.</p>
+<div id="precision"></div></section>
+<section id="Precision-(variation),-reproducibility,-reliability,-replicability">
+<h4>Precision (variation), reproducibility, reliability, replicability<a class="headerlink" href="#Precision-(variation),-reproducibility,-reliability,-replicability" title="Link to this heading"></a></h4>
+<p>These characteristics measure the extent to which equal or similar input produces equal or similar results. Reliable methods produce output within a given range of variation (e.g. in terms appearance). A method is reproducible, if two runs of this method with the exact same input and setup produce the exact same results. Replicability of a method can be determined if two runs of a method with the same input and same setup arrive at similar conclusions.</p>
+<center width="100%"><p><img alt="3aaf33bcb1da4f3f87f0f72963373487" class="no-scaled-link" src="../_images/accuracy_precision.png" width="600" /></p>
+</center><div id="robustness"></div></section>
+<section id="Robustness">
+<h4>Robustness<a class="headerlink" href="#Robustness" title="Link to this heading"></a></h4>
+<p>Robustness of a method characterizes the change of the quality of an analysis result if conditions deviate from assumptions made for analysis (e.g., when noise level increases or if object appearance deviates from prior assumptions). For example, robustness of a segmentation algorithm is the ability of an algorithm to persist in sufficient performance despite abnormalities in the input images (e.g. due to patient motion). Reproducibility and robustness are also important performance indicators
+in case of varying image data (different scanners, hospitals, patient populations, etc.).</p>
+<div id="efficiency"></div></section>
+<section id="Efficiency">
+<h4>Efficiency<a class="headerlink" href="#Efficiency" title="Link to this heading"></a></h4>
+<p>The effort which must be exerted to achieve an analysis result is described by efficiency. You may recall that there are semi-automated methods that require some degree of human interaction or expert knowledge. These factors contribute to the overall determination of a method’s efficiency.</p>
+<div id="fault"></div></section>
+<section id="Fault-detection">
+<h4>Fault detection<a class="headerlink" href="#Fault-detection" title="Link to this heading"></a></h4>
+<p>The ability to discover possible faults while an analysis method is being applied is called fault detection. It is a very useful feature, because it requires the method to test for reliability of its own results.</p>
+<div id="quality_measures"></div></section>
+</section>
+<section id="1.3-Measures-of-quality">
+<h3>1.3 Measures of quality<a class="headerlink" href="#1.3-Measures-of-quality" title="Link to this heading"></a></h3>
+<p>Quality is determined by the kind of analysis which has been conducted on a dataset:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Task</p></th>
+<th class="head"><p>Quality measure</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Segmentation</p></td>
+<td><p>Correspondence between the segmented object and a reference segmentation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Registration</p></td>
+<td><p>Deviation from the correct registration transformation</p></td>
+</tr>
+<tr class="row-even"><td><p>Computer-aided detection (CAD)</p></td>
+<td><p>Ratio between correct and incorrect decisions</p></td>
+</tr>
+</tbody>
+</table>
+<p>See also <a class="reference external" href="https://www.springer.com/gp/book/9781447160960">chapter 13.1 of the Guide to Medical Image Analysis by Tonnies, Klaus D</a></p>
+<div id="seg_qm"></div><section id="Segmentation---quality-measures">
+<h4>Segmentation - quality measures<a class="headerlink" href="#Segmentation---quality-measures" title="Link to this heading"></a></h4>
+<p>When segmenting an object in an image, a measure of comparison between some reference <span class="math notranslate nohighlight">\(g\)</span> (usually a ground truth) and the segmented object <span class="math notranslate nohighlight">\(f\)</span> is required. Mutual correspondence may be determined by calculating volumetric overlap, overlap between object and background or performing distance measurements (of boundary deviations). In 3D cases, volumetric measurements aim to count the number of voxels in both the segmented object and the reference norm weighted by the volume covered by
+each voxel.</p>
+<p>Overlaps between objects <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> can be calculated by measures that count over-segmentation (number of elements) and under-segmentation.</p>
+<div id="dsc_hd_iou"></div><p>The next measures often used for quality assessment are <em>Dice similarity coefficient</em> (DSC) a.k.a <em>Sørensen–Dice coefficient</em> (<span class="math notranslate nohighlight">\(d\)</span>), <em>Intersection over union</em> (<span class="math notranslate nohighlight">\(i\)</span>) and the <em>Jaccard index</em> (<span class="math notranslate nohighlight">\(j\)</span>):</p>
+<p><span class="math">\begin{equation}
+d = \frac{2|F\cap\,G|}{|F|+|G|}\,\,,
+\end{equation}</span></p>
+<p><span class="math">\begin{equation}
+i = \frac{\mathrm{DSC}}{2 - \mathrm{DSC}}\,\,, \mathrm{and}
+\end{equation}</span></p>
+<p><span class="math">\begin{equation}
+j = \frac{|F\cap\,G|}{|F\cup\,G|}\,\,,
+\end{equation}</span></p>
+<p>where <span class="math notranslate nohighlight">\(F\cap G\)</span> is the size of elements (voxels) in overlap, and <span class="math notranslate nohighlight">\(|F|\)</span>, <span class="math notranslate nohighlight">\(|G|\)</span> are the sizes of individual volumes. The coefficient is equal to 1 in case of perfect correspondence; otherwise it is smaller than 1. In the medical image analysis community, the Dice coefficient is more popular, and therefore also more often present in literature.</p>
+<p>Neither Dice nor Jaccard indices can be used to measure outliers (e.g. in tasks where organ boundaries are to be segmented as part of access planning in surgery). In minimally invasive procedures, it is crucial to determine the deviation of the segmented boundary from the true boundary. This can be done by <em>Hausdorff distance</em> (HD) between <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(G\)</span>. The Hausdorff distance is defined as the maximum of all shortest distances <span class="math notranslate nohighlight">\(d\)</span> between points in <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(G\)</span>. Since
+this measure is highly sensitive to image artefacts, the quantile Hausdorff distance is used, where distances of largest outliers are averaged. It is computed from a quantile of a histogram of distances from <span class="math notranslate nohighlight">\(F\)</span> to <span class="math notranslate nohighlight">\(G\)</span> and from <span class="math notranslate nohighlight">\(G\)</span> to <span class="math notranslate nohighlight">\(F\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{equation}
+h^{q} = \mathrm{max}(t_{q}(d(f,G)),t_{q}(d(g,F)))
+\end{equation}\]</div>
+<div id="limitations"></div><div style="float:right;margin:-5px 5px"><p><img alt="d06c8f55b55541a2adec74d823eaf118" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+</section>
+</section>
+<section id="2.-Common-limitations-of-performance-metrics-used-for-segmentation-tasks">
+<h2>2. Common limitations of performance metrics used for segmentation tasks<a class="headerlink" href="#2.-Common-limitations-of-performance-metrics-used-for-segmentation-tasks" title="Link to this heading"></a></h2>
+<p>Recent meta-analytical research has detected major issues in algorithm validation. Most of these flaws are related to the practical use of some performance metrics in a given analysis task. One of the core issues in medical image analysis is the choice of inappropriate metrics <a class="reference external" href="https://www.nature.com/articles/s41467-018-07619-7">Maier-Hein, L. et al. (2018)</a>. In the same publication, it has been reported that image segmentation is the most popular of all medical image processing tasks taking
+into account international challenges. In these competitions, the chosen metrics significantly influence the rankings of various methods, and it was found out that researchers are missing guidelines for choosing the right metric for a given problem. More information can be found in the article <a class="reference external" href="https://arxiv.org/abs/2104.05642">Common Limitations of Image Processing Metrics: A Picture Story</a>.</p>
+<div id="small_structures"></div><section id="Small-structures">
+<h3>Small structures<a class="headerlink" href="#Small-structures" title="Link to this heading"></a></h3>
+<p>It is important to understand the mathematical properties of a metric before applying it to a given task. Segmentation of small structures, such as brain lesions (e.g. multiple sclerosis) often employs Dice scores, which may not be an appropriate metric because of the often unknown pathological outlines and high inter-observer variability in such tasks. The predictions of two algorithms may differ only by one pixel, yet the impact on the Dice score outcome is substantial (see figure below).</p>
+<center width="100%"><p><img alt="4a031c979e7f43c69e0fce8a004fbdce" class="no-scaled-link" src="../_images/small_structure_segmentation.jpg" width="600" /></p>
+</center><p>Figure from <a class="reference external" href="https://arxiv.org/abs/2104.05642">Common Limitations of Image Processing Metrics: A Picture Story</a></p>
+<div id="artifacts"></div></section>
+<section id="Image-artifacts">
+<h3>Image artifacts<a class="headerlink" href="#Image-artifacts" title="Link to this heading"></a></h3>
+<p>Similar issues may arise in the presence of image artifacts such as noise or errors in reference annotations. As seen in the figure below, a single erroneous pixel in the reference annotation may lead to a large performance decrease.</p>
+<center width="100%"><p><img alt="6cee903b00aa4896864b7ef1d7dce326" class="no-scaled-link" src="../_images/noise_effect_segmentation.jpg" width="400" /></p>
+</center><p>Figure from <a class="reference external" href="https://arxiv.org/abs/2104.05642">Common Limitations of Image Processing Metrics: A Picture Story</a></p>
+<div id="overlap_measurements"></div></section>
+<section id="Overlap-measurements">
+<h3>Overlap measurements<a class="headerlink" href="#Overlap-measurements" title="Link to this heading"></a></h3>
+<p>In overlap measurements, dedicated metrics are incapable of discovering differences in shapes, which may have huge impact e.g. on radiotherapy applications. Completely different predictions may therefore lead to the exact same DSC value.</p>
+<center width="100%"><p><img alt="eaa5a12543874863997ed52f7278e4db" class="no-scaled-link" src="../_images/shape_unawareness.jpg" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://arxiv.org/abs/2104.05642">Common Limitations of Image Processing Metrics: A Picture Story</a></p>
+<div id="over_underseg"></div></section>
+<section id="Over--and-undersegmentation">
+<h3>Over- and undersegmentation<a class="headerlink" href="#Over--and-undersegmentation" title="Link to this heading"></a></h3>
+<p>In some applications detecting over- and undersegmentation, the DSC metric does not represent these performance indicators reliably, while HD is invariant to these properties.</p>
+<center width="100%"><p><img alt="57e2b0caea9b417e9c94ed432be994ed" class="no-scaled-link" src="../_images/over_under_segmentation.jpg" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://arxiv.org/abs/2104.05642">Common Limitations of Image Processing Metrics: A Picture Story</a></p>
+<div id="object_bias"></div><section id="Single-object-bias">
+<h4>Single object bias<a class="headerlink" href="#Single-object-bias" title="Link to this heading"></a></h4>
+<p>Commonly, segmentation metrics, such as DSC, are applied to detection and localization problems as well. In general, the DSC tends to be strongly biased against single objects, which is why its application in detection tasks should be avoided. An example where DSC underperforms, can be seen below.</p>
+<center width="100%"><p><img alt="42da33904b4c4c63a88f4560749e13e0" class="no-scaled-link" src="../_images/detection_performance.jpg" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://arxiv.org/abs/2104.05642">Common Limitations of Image Processing Metrics: A Picture Story</a></p>
+<div id="combination"></div></section>
+<section id="Metric-combination">
+<h4>Metric combination<a class="headerlink" href="#Metric-combination" title="Link to this heading"></a></h4>
+<p>Metrics are typically combined over all test cases to produce overall ranking. However, this can be detrimental in case of missing values (NA) and lead to a substantially higher DSC or varying HD compared to setting missing values to zero. Moreover, a single metric usually does not reflect all important features for algorithm validation. Through the combination of multiple metrics helps mitigate the problem, it has to be kept in mind that some metrics are mathematically related to each other,
+such as DSC and Intersection over union (IoU) (see above). Thus combining related metrics will not change the ranking, and only metrics measuring different properties should be aggregated.</p>
+<div id="right_metric"></div></section>
+<section id="Choosing-the-right-metric-for-a-given-task">
+<h4>Choosing the right metric for a given task<a class="headerlink" href="#Choosing-the-right-metric-for-a-given-task" title="Link to this heading"></a></h4>
+<p>The selection of the most appropriate metric depends on your biomedical question and the characteristics of its problem:</p>
+<ul class="simple">
+<li><p>What is the size, volume and shape of structures?</p></li>
+<li><p>Are there image artefacts?</p></li>
+<li><p>What is the annotation quality?</p></li>
+<li><p>Is computation time relevant?</p></li>
+<li><p>Is there any reference available?</p></li>
+<li><p>Do we prefer higher sensitivity or specificity?</p></li>
+</ul>
+<div style="float:right;margin:-5px 5px"><p><img alt="aa2c3029d1354fe6a0b237320d4a7194" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+</section>
+<section id="Question-1:">
+<h3><em>Question 1</em>:<a class="headerlink" href="#Question-1:" title="Link to this heading"></a></h3>
+<p>Describe a situation where volume computation would be an appropriate criterion for measuring the quality of a segmentation task. When should it not be used?</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="b21bc38b5def43dba4b6611c7266edc0" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2:">
+<h3><em>Question 2</em>:<a class="headerlink" href="#Question-2:" title="Link to this heading"></a></h3>
+<p>What information about segmentation quality is revealed by the Hausdorff distance? Please describe a scenario where this measure is important to rate a segmentation method.</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="05a69ff9dd954be89c1b6c8062b3073e" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-3:">
+<h3><em>Question 3</em>:<a class="headerlink" href="#Question-3:" title="Link to this heading"></a></h3>
+<p>What needs to be made sure when selecting test data for ground truth?</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="0cccbd295a12424f9f9c3065e804c4cd" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-4:">
+<h3><em>Question 4</em>:<a class="headerlink" href="#Question-4:" title="Link to this heading"></a></h3>
+<p>Why is it necessary to carry out manual segmentation several times by different and by the same person if it shall be used for ground truth? How is the information that is gained from these multiple segmentations used for rating the performance of an algorithm?</p>
+<p>Type your answer here</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="2.1_segmentation_introduction.html" class="btn btn-neutral float-left" title="Topic 2.1: Exercises - Image segmentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="2.3_segmentation_in_feature_space.html" class="btn btn-neutral float-right" title="Topic 2.3: Segmentation in feature space" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 1.2: Point-based registration &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 1.3: Image similarity metrics" href="1.3_Image_similarity_metrics.html" />
+    <link rel="prev" title="Topic 1.1: Geometrical transformations" href="1.1_Geometrical_transformations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 1.2: Point-based registration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Point-based-registration-(theory)">1. Point-based registration (theory)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Optimization">Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1.1:"><em>Question 1.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1.2:"><em>Question 1.2</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Evaluation-of-image-registration-accuracy">Evaluation of image registration accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1.3:"><em>Question 1.3</em>:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Point-based-transformations-(theory-and-exercises)">2. Point-based transformations (theory and exercises)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#2.1-Inverse-mapping">2.1 Inverse mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.1.1:"><em>Question 2.1.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.1.1:"><em>Exercise 2.1.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.2-Least-squares-solution-to-an-overdetermined-system-of-linear-equations">2.2 Least-squares solution to an overdetermined system of linear equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.2.1:"><em>Exercise 2.2.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.2.1:"><em>Question 2.2.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.3-Least-squares-fitting-of-an-affine-transformation">2.3 Least-squares fitting of an affine transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.3.1:"><em>Exercise 2.3.1</em>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 1.2: Point-based registration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/1.2_Point-based_registration.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Topic-1.2:-Point-based-registration">
+<h1>Topic 1.2: Point-based registration<a class="headerlink" href="#Topic-1.2:-Point-based-registration" title="Link to this heading"></a></h1>
+<p>This notebook combines theory with exercises to support the understanding of point-based registration in medical image analysis. Implement all functions in the <code class="docutils literal notranslate"><span class="pre">code</span></code> folder of your cloned repository, and test it in this notebook after implementation by importing your functions to this notebook. Use available markdown sections to fill in your answers to questions as you proceed through the notebook.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic">
+<li><p>Point-based registration (theory)</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#Optimization"><span class="std std-ref">Optimization</span></a></p></li>
+<li><p>Evaluation of image registration accuracy</p></li>
+</ul>
+</li>
+<li><p>Point-based transformations (theory and exercises)</p>
+<p>2.1 Inverse mapping</p>
+<p>2.2 Least squares solution to an overdetermined system of linear equations</p>
+<p>2.3 Least squares fitting of an affine transformation</p>
+</li>
+</ol>
+<p><strong>References:</strong></p>
+<p>[1] Point-based registration: <a class="reference external" href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.464.5408&amp;rep=rep1&amp;type=pdf">Fitzpatrick, J.M., et al. Image registration, chapter 8.3</a></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+</pre></div></div>
+</div>
+<div id="pb_reg_theory"></div><div style="float:right;margin:-5px 5px"><p><img alt="ae27763db24442558f60384b73f2d676" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="1.-Point-based-registration-(theory)">
+<h2>1. Point-based registration (theory)<a class="headerlink" href="#1.-Point-based-registration-(theory)" title="Link to this heading"></a></h2>
+<p>Image registration driven by a reliable (set of) reference point(s) on both the fixed and moving views is referred to as point-based (<a class="reference external" href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.464.5408&amp;rep=rep1&amp;type=pdf">Fitzpatrick, J.M., et al. Image registration, chapter 8.3</a>). Selected points in the fixed image that are considered reliable, and are typically called <em>fiducial points</em> or <em>fiducials</em>, can be part of two groups of distinguishable features: <em>intrinsic features</em> (anatomical
+landmarks, such as the intersection of the central sulcus with the midline of the brain), or <em>extrinsic features</em> (implanted markers, e.g. on a head coil).</p>
+<p>Unlike in landmark-based registration, marker-based registration tends to be more precise due to its independence of anatomical structures which may sometimes be hard to discern. Fiducial points within markers may be produced via automated methods that typically assign location to the centroid of the marker.</p>
+<p>A perfect fiducial alignment is typically impossible due to multiple reasons. There is always some fiducial localization error of the marker, and misalignments, shifts or distortions of the markers may occur relative to the voxel grid. The aim of fiducial-guided registration is to minimize the variance in the two views. Generally, the effective mean displacement will be smaller in magnitude if the marker is larger (ideally beyond the voxel size) and vice versa. Larger markers spanning more than
+two voxels can be more accurately localized, thereby improving the registration outcome. Reasons are three-fold:</p>
+<ol class="arabic simple">
+<li><p>When the marker is large, the fraction of partially filled voxels within it is lower</p></li>
+<li><p>Erroneous shifts are cancelled out when the marker partially fills more voxels</p></li>
+<li><p>Noise averaging over a larger number of voxels</p></li>
+</ol>
+<p>Example: Assuming two images misaligned by translation, a simple registration algorithm that is efficient in this example would consist of these steps:</p>
+<ul class="simple">
+<li><p>Mark the location of some well discernible features in the fixed image</p></li>
+<li><p>Mark the corresponding location in the moving image</p></li>
+<li><p>Compute the translation as <span class="math notranslate nohighlight">\(t = x^{\prime} - x\)</span></p></li>
+<li><p>Transform the moving image by translating it with <span class="math notranslate nohighlight">\(\mathbf{-t}\)</span></p></li>
+</ul>
+<p>It is therefore unrealistic to look for an algorithm that will find a transformation that results in a perfect alignment of all corresponding fiducial pairs. However, we can design an algorithm that will find a transformation that results in the best possible alignment given that fact that there will always be some error. The better an algorithm aligns the two views, the lower this error becomes.</p>
+<p>How to find the transformation that aligns fiducials at the lowest possible alignment error?</p>
+<ul class="simple">
+<li><p>Step 1: Write the error as a function of the transformation (affine registration)</p></li>
+<li><p>Step 2: Find the minimum of the error function w.r.t. the transformation</p></li>
+</ul>
+<div id="optimization"></div><section id="Optimization">
+<h3>Optimization<a class="headerlink" href="#Optimization" title="Link to this heading"></a></h3>
+<p>Optimization involves finding the best parameters according to an objective function, which is either minimised or maximised. If we have a method that finds the maximum of a function, it can be easily used to find a minimum by inverting the function.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="9c6ac40fa6144e7cb3d9167c2a4e9e47" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-1.1:">
+<h3><em>Question 1.1</em>:<a class="headerlink" href="#Question-1.1:" title="Link to this heading"></a></h3>
+<p>Why is full search of the parameter space not the most efficient optimization approach in 2D? Ideally, explain by example.</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="eca71b8aa1164b41aedbb549f769f3ee" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-1.2:">
+<h3><em>Question 1.2</em>:<a class="headerlink" href="#Question-1.2:" title="Link to this heading"></a></h3>
+<p>What would be a better solution?</p>
+<p>Type your answer here</p>
+<div id="evaluation"></div><div style="float:right;margin:-5px 5px"><p><img alt="ae119f17c00a4108ab36d4cf275f24ff" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+<section id="Evaluation-of-image-registration-accuracy">
+<h3>Evaluation of image registration accuracy<a class="headerlink" href="#Evaluation-of-image-registration-accuracy" title="Link to this heading"></a></h3>
+<p>Image registration can be evaluated by computing the registration error for some target corresponding point pairs. The target points should be selected in locations that are relevant for some treatment or diagnosis. Basically, this is the same as the process of selecting corresponding point pairs to compute the image transformation. The following steps should be made when evaluating registration accuracy:</p>
+<ol class="arabic simple">
+<li><p>Perform image registration (compute the transformation matrix <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>)</p></li>
+<li><p>Annotate some target corresponding point pairs in the fixed and moving images. These must be different from the corresponding points used to compute the transformation <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>, and located at locations that are relevant for some treatment or diagnosis.</p></li>
+<li><p>Transform the points from the moving image</p></li>
+<li><p>Compute the target registration error as the average distance between points in the fixed image and the transformed moving points.</p></li>
+</ol>
+<div style="float:right;margin:-5px 5px"><p><img alt="b3c12359fbcb4be7958f00ad9c72f557" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-1.3:">
+<h3><em>Question 1.3</em>:<a class="headerlink" href="#Question-1.3:" title="Link to this heading"></a></h3>
+<p>In the registration evaluation procedure, the target corresponding points must be different from the points used to compute the image transformation. Why?</p>
+<p>Type your answer here</p>
+<div id="ls"></div><div style="float:right;margin:-5px 5px"><p><img alt="54cd4d18c41c438fadb6ced1dc8dc019" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+</section>
+<section id="2.-Point-based-transformations-(theory-and-exercises)">
+<h2>2. Point-based transformations (theory and exercises)<a class="headerlink" href="#2.-Point-based-transformations-(theory-and-exercises)" title="Link to this heading"></a></h2>
+<p>The term ‘’image transformation’’ refers to the transformation of pixel spatial coordinates. Images are stored as arrays of values where each corresponds to a pixel intensity. In addition to the intensity, in medical imaging, each pixel is associated with spatial coordinates (these are in some world coordinate system where the pixel intensity value appears), and extent (the physical extent of a pixel).</p>
+<p>In the exercises below, we assume that the pixel indices correspond to the spatial coordinates. Moreover, we assume that all images have pixels of the same size and shape (unit size isotropic). Unlike in these exercises, the concepts of physical pixel size and spatial coordinates are vital in practice.</p>
+<p>The problem with forward mapping of the coordinates are gaps, and overlaps. These can be avoided by using inverse mapping and interpolation.</p>
+<p>Following steps describe the inverse mapping of an image with a transformation <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Define a grid of the output image</p></li>
+<li><p>Map the grid points to the input image with inverse transform <span class="math notranslate nohighlight">\(\mathbf{T^{-1}}\)</span>.</p></li>
+<li><p>Determine the intensity value at those locations with image interpolation</p></li>
+</ol>
+<p>In the previous exercises you have implemented functions for computing transformation matrices and applied them to geometric objects. In these exercises you will first write a Python function that performs image transformation by the inverse mapping method. Then, you will implement a function that performs linear least squares fitting. All necessary information for implementing these functions can be found in the lecture slides. You can use the functions that you implement in this section to
+perform point-based affine image registration in the project work.</p>
+<div id="ls_inv_map"></div><section id="2.1-Inverse-mapping">
+<h3>2.1 Inverse mapping<a class="headerlink" href="#2.1-Inverse-mapping" title="Link to this heading"></a></h3>
+<p>Transforming an image results in transforming the locations of the image pixels. The most obvious method for transforming an image is to apply the geometric transformation to all pixel locations in an input image (the image that is being transformed) in order to determine where those pixel should be located in the output image (the transformed image) and then “fill in” the corresponding intensity values. This approach is called <em>forward mapping</em> and is illustrated in the figure below.</p>
+<center width="100%"><p><img alt="1658cdb560024383b6f0921e89d78caf" class="no-scaled-link" src="../_images/forward_mapping.png" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://blogs.mathworks.com/steve/2006/05/05/spatial-transformations-inverse-mapping">Steve on Image Processing and MATLAB</a></p>
+<p>The forward mapping method can be problematic as some pixels in the output image might not “receive” a value (resulting in gaps), while some pixels might “receive” multiple values (resulting in overlaps) from the input image. These problems can be avoided by using an approach called <em>inverse mapping</em> illustrated in the figure below. Inverse mapping works by transforming the locations of the output image back to the original image by applying the inverse of the geometric transformation. The
+values for the pixels of the transformed image can be obtained by interpolation at the determined location in the original image. This avoids the problem of gaps and multiple values of the forward mapping method.</p>
+<center width="100%"><p><img alt="3c0d9720b90b47eaa117c31645815f48" class="no-scaled-link" src="../_images/inverse_mapping.png" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://blogs.mathworks.com/steve/2006/05/05/spatial-transformations-inverse-mapping">Steve on Image Processing and MATLAB</a></p>
+<div style="float:right;margin:-5px 5px"><p><img alt="d089bc7e2e8d49b0961d259a771ec8d4" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2.1.1:">
+<h3><em>Question 2.1.1</em>:<a class="headerlink" href="#Question-2.1.1:" title="Link to this heading"></a></h3>
+<p>A template for implementing an image transformation function with inverse mapping is provided in the <code class="docutils literal notranslate"><span class="pre">image_transform()</span></code> function in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">2</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module. Read the documentation for the <code class="docutils literal notranslate"><span class="pre">numpy.meshgrid()</span></code> function that is used in the first part of this function (you can quickly look up the documentation <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.meshgrid.html">by clicking here</a>. Briefly explain what the following line of code does (what are the
+inputs and outputs?):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">output_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">output_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="3fc90551e8a24298be15298e7c10450a" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.1.1:">
+<h3><em>Exercise 2.1.1</em>:<a class="headerlink" href="#Exercise-2.1.1:" title="Link to this heading"></a></h3>
+<p>Implement the missing functionality in the <code class="docutils literal notranslate"><span class="pre">image_transform()</span></code> function. You will find the function in the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module. It is only missing a few lines of code that performs inverse mapping of the coordinates, and tests for exceptions.</p>
+<p>Once you have finalized your implementation, test it below. Run <code class="docutils literal notranslate"><span class="pre">image_transform_test()</span></code> from <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">2</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code> module and make sure that the output matches the result in the figure below.</p>
+<center width="100%"><p><img alt="1dc9e6c0cbc9450b8807d8feded2dd74" class="no-scaled-link" src="../_images/image_transform_test.png" width="600" /></p>
+</center><div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../code&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../data&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">image_transform_test</span>
+<span class="n">image_transform_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[4]</span><span class="ansi-green-fg">, line 7</span>
+<span class="ansi-green-fg">      4</span> sys.path.append(<span class="ansi-yellow-fg">&#39;</span><span class="ansi-yellow-fg">../data</span><span class="ansi-yellow-fg">&#39;</span>)
+<span class="ansi-green-fg">      6</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">registration_tests</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">import</span> image_transform_test
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">7</span> <span class="ansi-yellow-bg">image_transform_test</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">d:\Developer\GitHub\8be030-mia\reader\../code\registration_tests.py:106</span>, in <span class="ansi-cyan-fg">image_transform_test</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">    104</span> T_2 = util.t2h(reg.rotate(np.pi/<span class="ansi-green-fg">4</span>), np.zeros(<span class="ansi-green-fg">2</span>))
+<span class="ansi-green-fg">    105</span> T_3 = util.t2h(reg.identity(), -<span class="ansi-green-fg">128</span>*np.ones(<span class="ansi-green-fg">2</span>))
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">106</span> T_rot = <span class="ansi-yellow-bg">T_1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">dot</span>(T_2).dot(T_3)
+<span class="ansi-green-fg">    108</span> <span style="color: rgb(95,135,135)"># 45 deg. rotation around the image center followed by shearing</span>
+<span class="ansi-green-fg">    109</span> T_shear = util.t2h(reg.shear(<span class="ansi-green-fg">0.0</span>, <span class="ansi-green-fg">0.5</span>), np.zeros(<span class="ansi-green-fg">2</span>)).dot(T_rot)
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;NoneType&#39; object has no attribute &#39;dot&#39;
+</pre></div></div>
+</div>
+<div id="ls_overdet_sys_lin_eq"></div><div style="float:right;margin:-5px 5px"><p><img alt="20a611691cfb47ffb1fb734fc4ca96c3" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+<section id="2.2-Least-squares-solution-to-an-overdetermined-system-of-linear-equations">
+<h3>2.2 Least-squares solution to an overdetermined system of linear equations<a class="headerlink" href="#2.2-Least-squares-solution-to-an-overdetermined-system-of-linear-equations" title="Link to this heading"></a></h3>
+<p>A set of linear equations can be written in matrix form in the following way:</p>
+<p><span class="math">\begin{equation*}
+\left\{\begin{array}{c}{a_{1,1} w_{1}+a_{1,2} w_{2}+\ldots+a_{1, n} w_{n}=b_{1}} \\ {a_{2,1} w_{1}+a_{2,2} w_{2}+\ldots+a_{2, n} w_{n}=b_{2}} \\ {\vdots} \\ {a_{m, 1} w_{1}+a_{m, 2} w_{2}+\ldots+a_{m, n} w_{n}=b_{m}}\end{array}\right.
+\end{equation*}</span></p>
+<p><span class="math">\begin{equation}
+\left[ \begin{array}{cccc}{a_{1,1}} & {a_{1,2}} & {\ldots} & {a_{1, n}} \\ {a_{2,1}} & {a_{2,2}} & {\dots} & {a_{2, n}} \\ {\vdots} & {\vdots} & {\ddots} & {\vdots} \\ {a_{m, 1}} & {a_{m, 2}} & {\dots} & {a_{m, n}}\end{array}\right] \left[ \begin{array}{c}{w_{1}} \\ {w_{2}} \\ {\vdots} \\ {w_{n}}\end{array}\right]=\left[ \begin{array}{c}{b_{1}} \\ {b_{2}} \\ {\vdots} \\ {b_{m}}\end{array}\right]
+\end{equation}</span></p>
+<p><span class="math">\begin{equation}
+\mathbf{A w}=\mathbf{b}
+\end{equation}</span></p>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is an <span class="math notranslate nohighlight">\(n x 1\)</span> column-vector of the unknown variables <span class="math notranslate nohighlight">\(w_{i}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> is an <span class="math notranslate nohighlight">\(m x n\)</span> matrix of the known coefficients and <span class="math notranslate nohighlight">\(a_{i, j}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> is an <span class="math notranslate nohighlight">\(m x 1\)</span> column-vector of the known constant terms <span class="math notranslate nohighlight">\(b_{i}\)</span>. Solving the set of equations means finding the values of <span class="math notranslate nohighlight">\(w_{i}\)</span> that satisfy the set of equations.</p>
+<ul class="simple">
+<li><p>When <span class="math notranslate nohighlight">\(m &lt; n\)</span> the equations have no unique solution.</p></li>
+<li><p>When <span class="math notranslate nohighlight">\(m = n\)</span> the equations have a unique solution.</p></li>
+<li><p>When <span class="math notranslate nohighlight">\(m &gt; n\)</span> the equations are overconstrained and there may not be an exact solution for <strong>z</strong>. In this case, what is often consider is minimization of the squared error.</p></li>
+</ul>
+<div style="float:right;margin:-5px 5px"><p><img alt="0e3dfa4181ba4297b2b850cf816ce69e" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.2.1:">
+<h3><em>Exercise 2.2.1</em>:<a class="headerlink" href="#Exercise-2.2.1:" title="Link to this heading"></a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">2</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module, <code class="docutils literal notranslate"><span class="pre">ls_solve()</span></code> contains a template for a function that finds the least squares solution for <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>. Implement the missing functionality of that function.</p>
+<p>Test your implementation by solving the following system of equations:</p>
+<p><span class="math">\begin{equation}
+\left\{\begin{aligned} 3 w_{1}+4 w_{2} &=1 \\ 5 w_{1}+6 w_{2} &=2 \\ 7 w_{1}+8 w_{2} &=3 \\ 17 w_{1}+10 w_{2} &=4 \end{aligned}\right.
+\end{equation}</span></p>
+<p>In order to do so, you have to create the <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> matrix and the <span class="math notranslate nohighlight">\(\mathbf{B}\)</span> vector in Python and then call the <code class="docutils literal notranslate"><span class="pre">ls_solve()</span></code> function. Implement your code in the <code class="docutils literal notranslate"><span class="pre">ls_solve_test()</span></code> script in the <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code> module.</p>
+<p>The found solution should be <span class="math notranslate nohighlight">\(\mathrm{w}=[0.0694,0.2842]^{\top}\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">ls_solve_test</span>
+
+<span class="n">ls_solve_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="b4c00f15b34a484da20d18db65b174d4" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2.2.1:">
+<h3><em>Question 2.2.1</em>:<a class="headerlink" href="#Question-2.2.1:" title="Link to this heading"></a></h3>
+<p>For which equation does the solution result in the largest error?</p>
+<p>Type your answer here</p>
+<div id="ls_affine"></div><div style="float:right;margin:-5px 5px"><p><img alt="064428768e0c4090aa5ba5a22e69d8dc" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+<section id="2.3-Least-squares-fitting-of-an-affine-transformation">
+<h3>2.3 Least-squares fitting of an affine transformation<a class="headerlink" href="#2.3-Least-squares-fitting-of-an-affine-transformation" title="Link to this heading"></a></h3>
+<p>In point-based image registration, the goal is to find a transformation that aligns the moving with the fixed image given a set of corresponding points in the two images. In the case of affine registration, we make an assumption that the two sets of points are related trough the transformation matrix in the following way:</p>
+<p><span class="math">\begin{equation}
+\mathbf{T X}^{\prime}=\mathbf{X}
+\end{equation}</span></p>
+<p><span class="math">\begin{equation}
+\left[ \begin{array}{ccc}{w_{1}} & {w_{2}} & {w_{3}} \\ {w_{4}} & {w_{5}} & {w_{6}} \\ {0} & {0} & {1}\end{array}\right] \left[ \begin{array}{cccc}{x_{1}^{\prime}} & {x_{2}^{\prime}} & {\ldots} & {x_{n}^{\prime}} \\ {y_{1}^{\prime}} & {y_{2}^{\prime}} & {\ldots} & {y_{n}^{\prime}} \\ {1} & {1} & {\ldots} & {1}\end{array}\right]=\left[ \begin{array}{cccc}{x_{1}} & {x_{2}} & {\ldots} & {x_{n}} \\ {y_{1}} & {y_{2}} & {\ldots} & {y_{n}} \\ {1} & {1} & {\ldots} & {1}\end{array}\right]
+\end{equation}</span></p>
+<p>In the previous expression, <span class="math notranslate nohighlight">\(\left\{x_{i}, y_{i}\right\}\)</span> are the coordinates of the points in the fixed image, <span class="math notranslate nohighlight">\(\left\{x_{i}^{\prime}, y_{i}^{\prime}\right\}\)</span> are the coordinates of the corresponding points in the moving image and <span class="math notranslate nohighlight">\(w_{i}\)</span> are the elements of the transformation matrix (for example, <span class="math notranslate nohighlight">\(w_{3}\)</span> and <span class="math notranslate nohighlight">\(w_{6}\)</span> are the translation parameters). If we transpose both sides of this equation, it will immediately become obvious that this expression defines two
+systems of linear equations:</p>
+<p><span class="math">\begin{equation}
+\left[ \begin{array}{ccc}{x_{1}^{\prime}} & {y_{1}^{\prime}} & {1} \\ {x_{2}^{\prime}} & {y_{2}^{\prime}} & {1} \\ {\vdots} & {\vdots} & {\vdots} \\ {x_{m}^{\prime}} & {y_{m}^{\prime}} & {1}\end{array}\right] \left[ \begin{array}{ccc}{w_{1}} & {w_{4}} & {0} \\ {w_{2}} & {w_{5}} & {0} \\ {w_{3}} & {w_{6}} & {1}\end{array}\right]=\left[ \begin{array}{ccc}{x_{1}} & {y_{1}} & {1} \\ {x_{2}} & {y_{2}} & {1} \\ {\vdots} & {\vdots} & {\vdots} \\ {x_{m}} & {y_{m}} & {1}\end{array}\right]
+\end{equation}</span></p>
+<p>The two systems of equations are:</p>
+<p><span class="math">\begin{equation}
+\left[ \begin{array}{ccc}{x_{1}^{\prime}} & {y_{1}^{\prime}} & {1} \\ {x_{2}^{\prime}} & {y_{2}^{\prime}} & {1} \\ {\vdots} & {\vdots} & {\vdots} \\ {x_{m}^{\prime}} & {y_{m}^{\prime}} & {1}\end{array}\right] \left[ \begin{array}{c}{w_{1}} \\ {w_{2}} \\ {w_{3}}\end{array}\right]=\left[ \begin{array}{c}{x_{1}} \\ {x_{2}} \\ {\vdots} \\ {x_{n}}\end{array}\right], \text { and } \left[ \begin{array}{ccc}{x_{1}^{\prime}} & {y_{1}^{\prime}} & {1} \\ {x_{2}^{\prime}} & {y_{2}^{\prime}} & {1} \\ {\vdots} & {\vdots} & {\vdots} \\ {x_{m}^{\prime}} & {y_{m}^{\prime}} & {1}\end{array}\right] \left[ \begin{array}{c}{w_{4}} \\ {w_{5}} \\ {w_{6}}\end{array}\right]=\left[ \begin{array}{c}{y_{1}} \\ {y_{2}} \\ {\vdots} \\ {y_{m}}\end{array}\right]
+\end{equation}</span></p>
+<p>The first system gives the solution for <span class="math notranslate nohighlight">\(w_{1}\)</span>, <span class="math notranslate nohighlight">\(w_{2}\)</span> and <span class="math notranslate nohighlight">\(w_{3}\)</span>. Similarly, the second system gives the solution for <span class="math notranslate nohighlight">\(w_{4}\)</span>, <span class="math notranslate nohighlight">\(w_{5}\)</span> and <span class="math notranslate nohighlight">\(w_{6}\)</span>.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="f76e26c5ea85420690b544c2f02274ee" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.3.1:">
+<h3><em>Exercise 2.3.1</em>:<a class="headerlink" href="#Exercise-2.3.1:" title="Link to this heading"></a></h3>
+<p>Implement least squares fitting of an affine transform in the provided <code class="docutils literal notranslate"><span class="pre">ls_affine()</span></code> function template in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">2</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module. You have to form the <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> vector for the two systems of equations. The <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> matrix is the same for both systems and already implemented with the line <span class="math notranslate nohighlight">\(A = Xm'\)</span>. Then call <code class="docutils literal notranslate"><span class="pre">ls_solve()</span></code> to solve the two systems. Finally, you have to use the computed parameters to form a homogeneous transformation matrix
+(e.g. the first row of the transformation matrix will be the solution for the first linear system of equations).</p>
+<p>Test your implementation by calling <code class="docutils literal notranslate"><span class="pre">ls_affine_test()</span></code> from <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">2</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code> module. This function applies some arbitrary affine transformation to a test object, and then transforms the object back to the original with a transformation that is computed with <code class="docutils literal notranslate"><span class="pre">ls_affine()</span></code>. If your implementation is correct the retrieved object should match the original object in the displayed figure.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">ls_affine_test</span>
+
+<span class="n">ls_affine_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="1.1_Geometrical_transformations.html" class="btn btn-neutral float-left" title="Topic 1.1: Geometrical transformations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="1.3_Image_similarity_metrics.html" class="btn btn-neutral float-right" title="Topic 1.3: Image similarity metrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

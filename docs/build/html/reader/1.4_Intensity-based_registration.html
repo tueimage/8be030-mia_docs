@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 1.4: Intensity-based registration &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 1.5: Validation in medical image analysis (Registration)" href="1.5_Validation_in_medical_image_analysis_part_1.html" />
+    <link rel="prev" title="Topic 1.3: Image similarity metrics" href="1.3_Image_similarity_metrics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 1.4: Intensity-based registration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Intensity-based-registration">1. Intensity-based registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Optimization-for-intensity-based-registration">2. Optimization for intensity-based registration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Gradient-ascent-/-descent:">Gradient ascent / descent:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3.-Intensity-based-image-registration-(exercises)">3. Intensity-based image registration (exercises)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#3.1-Numerical-differentiation">3.1 Numerical differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-3.1.1:"><em>Exercise 3.1.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-3.1.2:"><em>Exercise 3.1.2</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-3.1.1:"><em>Question 3.1.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#3.2-Similarity-as-a-function-of-image-transformation">3.2 Similarity as a function of image transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-3.2.1:"><em>Question 3.2.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-3.2.1:"><em>Exercise 3.2.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#3.3-Similarity-as-a-function-of-rotation">3.3 Similarity as a function of rotation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-3.3.1:"><em>Exercise 3.3.1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-3.3.1:"><em>Question 3.3.1</em>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 1.4: Intensity-based registration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/1.4_Intensity-based_registration.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Topic-1.4:-Intensity-based-registration">
+<h1>Topic 1.4: Intensity-based registration<a class="headerlink" href="#Topic-1.4:-Intensity-based-registration" title="Link to this heading"></a></h1>
+<p>This notebook combines theory with exercises to support the understanding of intensity-based registration in medical image analysis. Implement all functions in the <code class="docutils literal notranslate"><span class="pre">code</span></code> folder of your cloned repository, and test it in this notebook after implementation by importing your functions to this notebook. Use available markdown sections to fill in your answers to questions as you proceed through the notebook.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic">
+<li><p>Intensity-based registration</p></li>
+<li><p>Optimization for intensity-based registration</p>
+<ul class="simple">
+<li><p>Gradient ascent/descent</p></li>
+</ul>
+</li>
+<li><p>Intensity-based similarity metrics (exercises)</p>
+<p>3.1 Numerical differentiation</p>
+<p>3.2 Similarity as a function of image transformation</p>
+<p>3.3 Similarity as a function of rotation</p>
+</li>
+</ol>
+<p><strong>References:</strong></p>
+<p>[1] Intensity-based registration: <a class="reference external" href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.464.5408&amp;rep=rep1&amp;type=pdf">Fitzpatrick, J.M., et al. Image registration, chapter 8.5</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div id="int_registration"></div><div style="float:right;margin:-5px 5px"><p><img alt="2a3fc5e313a74e4c892c03a85437d833" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="1.-Intensity-based-registration">
+<h2>1. Intensity-based registration<a class="headerlink" href="#1.-Intensity-based-registration" title="Link to this heading"></a></h2>
+<p>Besides points and surface features, image intensity is an alternative registration basis. It is even the most widely used registration basis. In general, the term <em>intensity</em> refers to scalar values of image pixels or voxels, which are used to calculate transformations between two images. Compared with point-based registration, intensity-based registration (<a class="reference external" href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.464.5408&amp;rep=rep1&amp;type=pdf">Fitzpatrick, J.M., et al. Image registration, chapter
+8.5</a>) requires less user interaction as it works by iterative optimization of an intensity-based similarity measure (the concepts of similarity measures are explained in notebook <a class="reference external" href="../reader/1.3_Image-similarity-metrics.ipynb">1.3_Registration_image-similarity-metrics</a>). When one of the images is being transformed, the similarity measures are a function of the image transformation. This is “step 1” in our
+general approach to registering two images. “Step 2” is finding the parameters that find the transformation that maximizes the similarity between two images.</p>
+<p>Intensity-based registration methods are relatively easy to automate and require few manual steps. However, their application is restricted to a limited range of images given the need for image preprocessing. Algorithms exploiting intensity-based image registration can be used for various purposes: registration of images with different dimensionality; intermodal and intramodal registration; and registration involving complex transforms, to name some.</p>
+<div id="optim"></div><div style="float:right;margin:-5px 5px"><p><img alt="ac4617a9d7574335b1cbc7364a5944a5" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+<section id="2.-Optimization-for-intensity-based-registration">
+<h2>2. Optimization for intensity-based registration<a class="headerlink" href="#2.-Optimization-for-intensity-based-registration" title="Link to this heading"></a></h2>
+<p>General procedure for maximizing similarity functions is:</p>
+<ol class="arabic simple">
+<li><p>Start with some initial values for the parameters (e.g. transformation <span class="math notranslate nohighlight">\(T\)</span>).</p></li>
+<li><p>Slightly update the parameters in such a way that the similarity will slightly increase.</p></li>
+<li><p>Repeat until the similarity <em>stops increasing</em>.</p></li>
+</ol>
+<div id="gradient"></div><section id="Gradient-ascent-/-descent:">
+<h3>Gradient ascent / descent:<a class="headerlink" href="#Gradient-ascent-/-descent:" title="Link to this heading"></a></h3>
+<p>To optimize similarity functions in intensity-based registration, we typically use gradient ascent (to localize function maximum) or gradient descent (to localize function minimum). In other words, these numerical methods help us find the minimum of the error or the maximum of the similarity in registration. To find the minimum and maximum of a function, we can compute the derivative and set it to zero (in case of more variables, set all partial derivatives to zero).</p>
+<p>Gradient ascent algorithm for maximizing a function <span class="math notranslate nohighlight">\(f(\mathbf{w})\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Choose some initial values of the parameters <span class="math notranslate nohighlight">\(\mathbf{w}\)</span></p></li>
+<li><p>Calculate the value for the gradient of <span class="math notranslate nohighlight">\(f(\mathbf{w})\)</span> for the current parameters</p></li>
+<li><p>Update the parameters in the direction of the gradient: <span class="math notranslate nohighlight">\(\mathbf{w} \leftarrow \mathbf{w} \color{red}{+} \mu\nabla_{\mathbf{w}}f(\mathbf{w})\)</span></p></li>
+</ol>
+<p>If we want to minimize the function we move in the direction opposite of the gradient (gradient descent): <span class="math notranslate nohighlight">\(\mathbf{w} \leftarrow \mathbf{w} \color{red}{-} \mu\nabla_{\mathbf{w}}f(\mathbf{w})\)</span></p>
+<p>The parameter <span class="math notranslate nohighlight">\(\mu\)</span> is called learning rate. It controls how fast we move towards the maximum (minimum). If <span class="math notranslate nohighlight">\(\mu\)</span> is too small, the maximum (or minimum) might not be reached in reasonable time. If <span class="math notranslate nohighlight">\(\mu\)</span> is too large, the maximum (minimum) might be missed. Initialization is important. Different starting points will result in different found maxima (and not always global).</p>
+<div id="int_registration_ex"></div><div style="float:right;margin:-5px 5px"><p><img alt="2cfbf91613964f5795e5ffaff05f40a3" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+</section>
+<section id="3.-Intensity-based-image-registration-(exercises)">
+<h2>3. Intensity-based image registration (exercises)<a class="headerlink" href="#3.-Intensity-based-image-registration-(exercises)" title="Link to this heading"></a></h2>
+<div id="numerical_diff"></div><section id="3.1-Numerical-differentiation">
+<h3>3.1 Numerical differentiation<a class="headerlink" href="#3.1-Numerical-differentiation" title="Link to this heading"></a></h3>
+<p>Numerical differentiation refers to finding the value of a derivative of a given function at a given point without the need to analytically differentiate the function. This technique can be very useful, for example, when the analytical expression for the derivative is too complex and computationally expensive to evaluate. In such a case it might be significantly faster to approximate the derivative instead of computing its exact value.</p>
+<p>A simple expression that approximates the derivative of a function <span class="math notranslate nohighlight">\(f(x)\)</span> is:</p>
+<p><span class="math">\begin{equation}
+\frac{d}{d x} f(x) \approx \frac{f(x+h)-f(x)}{h}
+\end{equation}</span></p>
+<p>where <span class="math notranslate nohighlight">\(h\)</span> is some very small positive number. When <span class="math notranslate nohighlight">\(h\)</span> approaches zero this expression becomes the true value of the derivative:</p>
+<p><span class="math">\begin{equation}
+\frac{d}{d x} f(x)=\lim _{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
+\end{equation}</span></p>
+<p>A better approximation of the derivative is the symmetric difference quotient given by the following expression:</p>
+<p><span class="math">\begin{equation}
+\frac{d}{d x} f(x) \approx \frac{f\left(x+\frac{h}{2}\right)-f\left(x-\frac{h}{2}\right)}{h}
+\end{equation}</span></p>
+<p>Numerical differentiation can also be used to approximate the partial derivatives of a function with more than one variable, for example:</p>
+<p><span class="math">\begin{equation}
+\frac{\partial}{\partial x} f(x, y) \approx \frac{f\left(x+\frac{h}{2}, y\right)-f\left(x-\frac{h}{2}, y\right)}{h}
+\end{equation}</span></p>
+<p><span class="math">\begin{equation}
+\frac{\partial}{\partial y} f(x, y) \approx \frac{f\left(x, y+\frac{h}{2}\right)-f\left(x, y-\frac{h}{2}\right)}{h}
+\end{equation}</span></p>
+<p>and in turn the gradient:</p>
+<p><span class="math">\begin{equation}
+\ f(x, y)=\left[ \begin{array}{c}{\frac{\partial}{\partial x} f(x, y)} \\ {\frac{\partial}{\partial y} f(x, y)}\end{array}\right] \approx\left[\frac{\frac{f\left(x+\frac{h}{2}, y\right)-f\left(x-\frac{h}{2}, y\right)}{h}}{\frac{f\left(x, y+\frac{h}{2}\right)-f\left(x, y-\frac{h}{2}\right)}{h}}\right]
+\end{equation}</span></p>
+<div style="float:right;margin:-5px 5px"><p><img alt="cb7b7fe6e6814ee99af36b67b349fe20" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-3.1.1:">
+<h3><em>Exercise 3.1.1</em>:<a class="headerlink" href="#Exercise-3.1.1:" title="Link to this heading"></a></h3>
+<p>In the provided template for the <code class="docutils literal notranslate"><span class="pre">ngradient()</span></code> function in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">4</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module, implement the computation of the gradient of a function with numerical differentiation using the symmetric difference quotient.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="bb5681b6a1874d9f9dfdcc3149064af4" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-3.1.2:">
+<h3><em>Exercise 3.1.2</em>:<a class="headerlink" href="#Exercise-3.1.2:" title="Link to this heading"></a></h3>
+<p>Test your implementation of <code class="docutils literal notranslate"><span class="pre">ngradient()</span></code>. An easy way to test this function is to numerically compute the gradient and then verify with the analytical expression. For example, since <span class="math notranslate nohighlight">\(\frac{d}{d x} e^{x}=e^{x}\)</span> the the numerical derivative <span class="math notranslate nohighlight">\(\frac{d}{d x} e^{x}\)</span> should have approximately the same value as <span class="math notranslate nohighlight">\(e^{x}\)</span>. Write your test cases in the provided <code class="docutils literal notranslate"><span class="pre">ngradient_test()</span></code> script in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">4</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">ngradient_test</span>
+
+<span class="n">ngradient_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AssertionError</span>                            Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[2]</span><span class="ansi-green-fg">, line 6</span>
+<span class="ansi-green-fg">      2</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> sys
+<span class="ansi-green-fg">      3</span> sys.path.append(<span class="ansi-yellow-fg">&#34;../code&#34;</span>)
+<span class="ansi-green-fg">      4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> registration_tests <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> ngradient_test
+<span class="ansi-green-fg">      5</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">6</span> ngradient_test()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\registration_tests.py:243</span>, in <span class="ansi-cyan-fg">ngradient_test</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">    241</span> exponential = <span class="ansi-bold" style="color: rgb(0,135,0)">lambda</span> x: np.exp(x)
+<span class="ansi-green-fg">    242</span> g1 = reg.ngradient(exponential, np.ones((<span class="ansi-green-fg">1</span>,)))
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">243</span> <span class="ansi-bold" style="color: rgb(0,135,0)">assert</span> <span style="color: rgb(0,135,0)">abs</span>(g1 - exponential(<span class="ansi-green-fg">1</span>)) &lt; <span class="ansi-green-fg">1e-5</span>, <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">Numerical gradient is incorrectly implemented (exponential test)</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    245</span> <span style="color: rgb(95,135,135)">#------------------------------------------------------------------#</span>
+<span class="ansi-green-fg">    246</span> <span style="color: rgb(95,135,135)"># TODO: Implement a few more test cases of ngradient</span>
+<span class="ansi-green-fg">    247</span> <span style="color: rgb(95,135,135)">#------------------------------------------------------------------#</span>
+<span class="ansi-green-fg">    249</span> <span style="color: rgb(0,135,0)">print</span>(<span class="ansi-yellow-fg">&#39;</span><span class="ansi-yellow-fg">Test successful!</span><span class="ansi-yellow-fg">&#39;</span>)
+
+<span class="ansi-red-fg">AssertionError</span>: Numerical gradient is incorrectly implemented (exponential test)
+</pre></div></div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="3399704b040847fbb3c59f478b2296bc" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-3.1.1:">
+<h3><em>Question 3.1.1</em>:<a class="headerlink" href="#Question-3.1.1:" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ndgradient()</span></code> function can be used to perform optimization with the gradient ascent/descent method. Describe in short how this algorithm works. What is the role of the learning rate parameter in gradient descent/ascent?</p>
+<p>Type your answer here</p>
+<div id="img_trans"></div></section>
+<section id="3.2-Similarity-as-a-function-of-image-transformation">
+<h3>3.2 Similarity as a function of image transformation<a class="headerlink" href="#3.2-Similarity-as-a-function-of-image-transformation" title="Link to this heading"></a></h3>
+<p>In the previous section, you have analyzed how the similarity between two images changes as a function of the rotation of one of the images. The goal of this exercise is to write a Python function that, given two images and the parameters of some transformation between them, will output the similarity measure. This function can then be used in combination with <code class="docutils literal notranslate"><span class="pre">ndgradient()</span></code> from the previous exercise to perform gradient based optimization of the transformation parameters.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">rigid_corr()</span></code> in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">4</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module computes the normalized cross-correlation between a fixed and a moving image transformed with rigid transformation. The three parameters of the rigid transformation (rotation angle and 2D translation vector) are passed to the function as a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<p>Here is an example of how to use this function to numerically compute the derivative for a set of parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ngradient</span>
+
+<span class="n">I</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;some_fixed_image.tif&#39;</span><span class="p">)</span>
+<span class="n">Im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;some_moving_image.tif&#39;</span><span class="p">)</span>
+
+<span class="c1"># create an instance of rigid_corr for this particular pair of images</span>
+<span class="n">rigid_corr_I_Im</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">rigid_corr</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">Im</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="o">/</span><span class="mi">100</span><span class="p">]</span>
+
+<span class="c1"># computes the numerical gradient at x</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">ndgradient</span><span class="p">(</span><span class="n">rigid_corr_I_Im</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this code snippet, we first create an instance of the function <code class="docutils literal notranslate"><span class="pre">rigid_corr()</span></code> where the first to input parameters (the fixed and moving image) are preset. The new function <code class="docutils literal notranslate"><span class="pre">rigid_corr_I_Im()</span></code> now has only a single input parameter - the vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> that stores the rotation angle and the translation. <code class="docutils literal notranslate"><span class="pre">rigid_corr_I_Im()</span></code> can be used with <code class="docutils literal notranslate"><span class="pre">ndgradient()</span></code> to compute the gradient of the similarity function at a particular point (in this example for the point
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[pi/4,</span> <span class="pre">10/100,</span> <span class="pre">20/100]</span></code>).</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="23f004145e84496caca6f6cbd1e4e51c" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-3.2.1:">
+<h3><em>Question 3.2.1</em>:<a class="headerlink" href="#Question-3.2.1:" title="Link to this heading"></a></h3>
+<p>Let’s assume that after executing this code snippet, the computed value for the derivative at point <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[pi/4,</span> <span class="pre">10,</span> <span class="pre">20]</span></code> is <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">=</span> <span class="pre">[10,</span> <span class="pre">-5,</span> <span class="pre">30]</span></code>. Will increasing the rotation angle (the first parameter of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>) by a very small amount increase or decrease the similarity between the fixed and transformed moving image? Motivate your answer.</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="bdee4549409b48549ea9fb4122a8c0d9" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-3.2.1:">
+<h3><em>Exercise 3.2.1</em>:<a class="headerlink" href="#Exercise-3.2.1:" title="Link to this heading"></a></h3>
+<p>Using <code class="docutils literal notranslate"><span class="pre">rigid_corr()</span></code> as an example, implement the following two functions in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">4</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">affine_corr()</span></code> that computes the normalized cross correlation for a pair of images as a function of affine transformation, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">affine_mi()</span></code> that computes the mutual information between a pair of images as a function of affine transformation.</p></li>
+</ol>
+<p>The only thing that you need to change is the length of the parameter vector, which for affine registration should contain the rotation, scaling, shearing and translation parameters, the computation of the transformation matrix and for <code class="docutils literal notranslate"><span class="pre">affine_mi()</span></code> the function call that computes the similarity measure.</p>
+<div id="rotation"></div></section>
+<section id="3.3-Similarity-as-a-function-of-rotation">
+<h3>3.3 Similarity as a function of rotation<a class="headerlink" href="#3.3-Similarity-as-a-function-of-rotation" title="Link to this heading"></a></h3>
+<p>Let’s put the implementations of correlation and mutual information functions to some use. You are going to compute the similarity between an image and a rotated version of that image for different rotation angles. The <code class="docutils literal notranslate"><span class="pre">registration_metrics_demo()</span></code> Python function contains code for performing this analysis. Study the function and make sure you understand what it does (you can skip the part about visualization of the results).</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="a559f16bea8b4f97a2009b9805536335" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-3.3.1:">
+<h3><em>Exercise 3.3.1</em>:<a class="headerlink" href="#Exercise-3.3.1:" title="Link to this heading"></a></h3>
+<p>Run the demo and describe and analyze the results.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">registration_metrics_demo</span>
+
+<span class="n">registration_metrics_demo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[3]</span><span class="ansi-green-fg">, line 6</span>
+<span class="ansi-green-fg">      2</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> sys
+<span class="ansi-green-fg">      3</span> sys.path.append(<span class="ansi-yellow-fg">&#34;../code&#34;</span>)
+<span class="ansi-green-fg">      4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> registration_tests <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> registration_metrics_demo
+<span class="ansi-green-fg">      5</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">6</span> registration_metrics_demo()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\registration_tests.py:300</span>, in <span class="ansi-cyan-fg">registration_metrics_demo</span><span class="ansi-blue-fg">(use_t2)</span>
+<span class="ansi-green-fg">    296</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k, ang <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">enumerate</span>(angles):
+<span class="ansi-green-fg">    297</span>     <span style="color: rgb(95,135,135)"># transformation matrix for rotating the image</span>
+<span class="ansi-green-fg">    298</span>     <span style="color: rgb(95,135,135)"># I by angles(k) around its center point</span>
+<span class="ansi-green-fg">    299</span>     T_2 = util.t2h(reg.rotate(ang), np.zeros(<span class="ansi-green-fg">2</span>))
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">300</span>     T_rot = <span class="ansi-yellow-bg">T_1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">dot</span>(T_2).dot(T_3)
+<span class="ansi-green-fg">    302</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> use_t2:
+<span class="ansi-green-fg">    303</span>         <span style="color: rgb(95,135,135)"># rotate the T2 image</span>
+<span class="ansi-green-fg">    304</span>         J, Xt = reg.image_transform(I_t2, T_rot)
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;NoneType&#39; object has no attribute &#39;dot&#39;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_1.4_Intensity-based_registration_23_1.svg" src="../_images/reader_1.4_Intensity-based_registration_23_1.svg" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="aeeb2e94f8e14fa29ee844ce7e43ae13" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-3.3.1:">
+<h3><em>Question 3.3.1</em>:<a class="headerlink" href="#Question-3.3.1:" title="Link to this heading"></a></h3>
+<p>Run the demo again but this time compute the similarity of the T1w image with a rotated version of the T2w image for different angles (note that the T1w and T2w images in this example are registered). Describe and analyze the results. Would the normalized cross-correlation metric be suitable to register the T1w and T2w images? Which of the two analyzed metrics would be more appropriate? Motivate your answer.</p>
+<p>Type your answer here</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="1.3_Image_similarity_metrics.html" class="btn btn-neutral float-left" title="Topic 1.3: Image similarity metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="1.5_Validation_in_medical_image_analysis_part_1.html" class="btn btn-neutral float-right" title="Topic 1.5: Validation in medical image analysis (Registration)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

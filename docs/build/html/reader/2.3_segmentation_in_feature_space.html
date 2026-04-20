@@ -1,0 +1,1409 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 2.3: Segmentation in feature space &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 2.4: Graph-cuts" href="2.4_graph_cuts.html" />
+    <link rel="prev" title="Topic 2.2: Validation in medical image analysis (Segmentation)" href="2.2_Validation_in_medical_image_analysis_part_2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 2.3: Segmentation in feature space</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Generating-and-visualizing-a-dataset">1. Generating and visualizing a dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#(A)">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#EXERCISE:">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#QUESTION:">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#(B)">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#(C)">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#(D)">(D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">EXERCISE:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Feature-scaling">2. Feature scaling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">EXERCISE:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#3.-Distances">3. Distances</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id12">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id16">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">(D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20">EXERCISE:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#4.-k-Means-clustering">4. k-Means clustering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id21">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id22">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id23">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id24">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id25">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id26">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id27">(D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id28">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#(E)">(E)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id29">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#(F)">(F)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id30">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#(G)">(G)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id31">EXERCISE:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#5.-Nearest-neighbour-classifier">5. Nearest neighbour classifier</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id32">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id33">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id34">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id35">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id36">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id37">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id38">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id39">(D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id40">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id41">(E)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id42">EXERCISE:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#6.-Brain-segmentation-example">6. Brain segmentation example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id43">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id44">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id45">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id46">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id47">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id48">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id49">(D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id50">QUESTION:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#7.-k---Nearest-Neighbor">7. k - Nearest Neighbor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id51">(A)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id52">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id53">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id54">(B)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id55">EXERCISE:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id56">QUESTION:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id57">(C)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id58">QUESTION:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 2.3: Segmentation in feature space</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/2.3_segmentation_in_feature_space.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+</pre></div></div>
+</div>
+<section id="Topic-2.3:-Segmentation-in-feature-space">
+<h1>Topic 2.3: Segmentation in feature space<a class="headerlink" href="#Topic-2.3:-Segmentation-in-feature-space" title="Link to this heading"></a></h1>
+<section id="1.-Generating-and-visualizing-a-dataset">
+<h2>1. Generating and visualizing a dataset<a class="headerlink" href="#1.-Generating-and-visualizing-a-dataset" title="Link to this heading"></a></h2>
+<p>We are going to be working with a <span class="math notranslate nohighlight">\(nxm\)</span> dataset <code class="docutils literal notranslate"><span class="pre">X</span></code>where each of the <span class="math notranslate nohighlight">\(n\)</span> rows corresponds to a sample, and each of the <span class="math notranslate nohighlight">\(m\)</span> columns corresponds to a feature. This dataset will also be associated with a <span class="math notranslate nohighlight">\(nx1\)</span> vector <code class="docutils literal notranslate"><span class="pre">Y</span></code> which stores the labels of the samples. Here is an example of a two-class problem, with randomly generated 100 samples with 2 features:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span><span class="mi">1</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This data is a bit too random for us to experiment with, so you have been provided with a function <code class="docutils literal notranslate"><span class="pre">generate_gaussian_data()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module that generates a more interesting dataset in 2D. Because the data is 2D, we can visualize it as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_gaussian_data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">generate_gaussian_data</span><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">im1</span>  <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Class 1&#39;</span><span class="p">)</span>
+<span class="n">im2</span>  <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">100</span><span class="p">:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">100</span><span class="p">:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Class 2&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x1de626b4cd0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_4_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_4_1.png" />
+</div>
+</div>
+<p>Instead of generating data, now we will create this type of dataset from the pixels of an image. You can use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;../images/dataset_brains/1_1_t1.tif.tif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to load an image. This is a T1 slice from subject 1, and it is slice 1 in the set we are using. You can view the image with <code class="docutils literal notranslate"><span class="pre">plt.imshow()</span></code>.</p>
+<p>Once the image is loaded, the simplest way to create a feature representation is to represent each pixel by its intensity value. These steps are displayed below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.cmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;gray&#39;</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;../data/dataset_brains/1_1_t1.tif&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_6_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_6_0.png" />
+</div>
+</div>
+<p>Now we also would like to have some labels Y. You can use the provided ground-truth for this. Load the ground-truth and view it with the following code:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GT</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;../data/dataset_brains/1_1_gt.tif&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="n">ax2</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">GT</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1de6276d450&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_8_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_8_1.png" />
+</div>
+</div>
+<p>You will see an image with 9 values. These correspond to the following 9 classes:</p>
+<ul class="simple">
+<li><p>0 background</p></li>
+<li><p>1 cerebellum</p></li>
+<li><p>2 white matter hyperintensities/lesions</p></li>
+<li><p>3 basal ganglia and thalami</p></li>
+<li><p>4 ventricles</p></li>
+<li><p>5 white matter</p></li>
+<li><p>6 brainstem</p></li>
+<li><p>7 cortical grey matter</p></li>
+<li><p>8 cerebrospinal fluid in the extracerebral space</p></li>
+</ul>
+<p>In this exercise we will only look if a pixel is outside the brain (label 0) or not. Here’s how to use the ground truth image to create these labels:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gt_mask</span> <span class="o">=</span> <span class="n">GT</span><span class="o">&gt;</span><span class="mi">0</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="n">ax2</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">GT</span><span class="p">)</span>
+<span class="n">ax3</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gt_mask</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">gt_mask</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_10_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_10_0.png" />
+</div>
+</div>
+<p>Now we have a 1D dataset <code class="docutils literal notranslate"><span class="pre">X</span></code> and labels <code class="docutils literal notranslate"><span class="pre">Y</span></code>. Let’s create some more features, so we can visualize them in 2D! Let’s take some context into account by blurring the image, for example as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndimage</span>
+<span class="n">I_blurred</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="n">ax2</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I_blurred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1de63465590&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_12_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_12_1.png" />
+</div>
+</div>
+<section id="(A)">
+<h3>(A)<a class="headerlink" href="#(A)" title="Link to this heading"></a></h3>
+</section>
+<section id="EXERCISE:">
+<h3>EXERCISE:<a class="headerlink" href="#EXERCISE:" title="Link to this heading"></a></h3>
+<p>Try different parameters of the <code class="docutils literal notranslate"><span class="pre">ndimage.gaussian_filter()</span></code> function, add two or three more features to your dataset, and use the <code class="docutils literal notranslate"><span class="pre">scatter_data()</span></code> function in the <code class="docutils literal notranslate"><span class="pre">utilities.py</span></code> module to visualize the features you added. Note that this function only visualizes at most 1000 pixels to save time, but there are more than 50K pixels in total. You can edit the function if you want to see more or less pixels in the plot. To test your different features, use the <code class="docutils literal notranslate"><span class="pre">scatter_data_test()</span></code> template
+function that is provided in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">scatter_data_test</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">scatter_data_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_14_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_14_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_14_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_14_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_14_2.png" src="../_images/reader_2.3_segmentation_in_feature_space_14_2.png" />
+</div>
+</div>
+</section>
+<section id="QUESTION:">
+<h3>QUESTION:<a class="headerlink" href="#QUESTION:" title="Link to this heading"></a></h3>
+<p>How would you describe the relationship of the intensity and the blurred intensity?</p>
+<p>How is this relationship affected when you change the parameter in <code class="docutils literal notranslate"><span class="pre">ndimage.gaussian_filter()</span></code>?</p>
+<p>What happens to the two classes of pixels at larger scales of the image and why?</p>
+</section>
+<section id="(B)">
+<h3>(B)<a class="headerlink" href="#(B)" title="Link to this heading"></a></h3>
+</section>
+<section id="id1">
+<h3>EXERCISE:<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Load the corresponding T2 slice (<code class="docutils literal notranslate"><span class="pre">1_1_t2.tif</span></code>), extract the same features from it (i.e. intensity and blurred intensity with the same scales) and examine the scatterplots of the T2 features against each other, and the T2 features against the T1 features (at the same scale).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">scatter_t2_test</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">scatter_t2_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_17_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_17_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_17_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_17_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_17_2.png" src="../_images/reader_2.3_segmentation_in_feature_space_17_2.png" />
+</div>
+</div>
+</section>
+<section id="id2">
+<h3>QUESTION:<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>What can you say about the T2 features?</p>
+<p>How do the T2 features relate to the T1 features?</p>
+</section>
+<section id="(C)">
+<h3>(C)<a class="headerlink" href="#(C)" title="Link to this heading"></a></h3>
+</section>
+<section id="id3">
+<h3>QUESTION:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>Look at the values on the axes of your plots. What happens overall to the values, as the scale increases? Why?</p>
+</section>
+<section id="(D)">
+<h3>(D)<a class="headerlink" href="#(D)" title="Link to this heading"></a></h3>
+<p>You can also add coordinates as features, as follows (note that you can also do this with <code class="docutils literal notranslate"><span class="pre">np.meshgrid()</span></code>):</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.cmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;gray&#39;</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;../data/dataset_brains/1_1_t1.tif&#39;</span><span class="p">)</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">X1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">240</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">T</span>
+<span class="n">y_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">240</span><span class="p">))</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span> <span class="n">x_coord</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">y_coord</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span><span class="mi">240</span><span class="p">))</span>
+<span class="n">ax2</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X2</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span><span class="mi">240</span><span class="p">))</span>
+<span class="n">ax3</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X2</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span><span class="mi">240</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x1de62b82490&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_21_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_21_1.png" />
+</div>
+</div>
+</section>
+<section id="id4">
+<h3>EXERCISE:<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>Instead of adding the coordinates separately, can you think of a feature which combines information from both coordinates, and which would be helpful in deciding whether a pixel is inside the brain or not? Implement this functionality in the template function <code class="docutils literal notranslate"><span class="pre">extract_coordinate_feature()</span></code> that is provided in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module. Test your implementation with the function <code class="docutils literal notranslate"><span class="pre">extract_coordinate_feature()</span></code>. Hint: the image of this feature looks like this:</p>
+<p><img alt="f242187bcd5d4260b9c15a3a4681c81e" class="no-scaled-link" height="400" src="../_images/informationXandY.png" width="400" /></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_coordinate_feature_test</span>
+<span class="n">extract_coordinate_feature_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_23_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_23_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="2.-Feature-scaling">
+<h2>2. Feature scaling<a class="headerlink" href="#2.-Feature-scaling" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>(A)<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+</section>
+<section id="id6">
+<h3>EXERCISE:<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>Take the dataset <code class="docutils literal notranslate"><span class="pre">X</span></code> where you now have the intensity, some blurred intensities, and the coordinate feature. Look at the distribution of values you have for each feature. You can do this by examining the values on the axes of the scatterplots, or using the functions <code class="docutils literal notranslate"><span class="pre">mean(X,1)</span></code> and <code class="docutils literal notranslate"><span class="pre">std(X,[],1)</span></code> where <code class="docutils literal notranslate"><span class="pre">X</span></code> is your feature dataset. Write your implementation in <code class="docutils literal notranslate"><span class="pre">feature_stats_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">feature_stats_test</span>
+<span class="n">feature_stats_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_data            : [T1 intensity, T1 gauss 2, T1 gauss 4, T1 gauss 6, Coordinate]
+Mean              : [55.71376736 55.10868056 55.08097222 55.04501736 91.82470613]
+Standard deviation: [68.7607908  62.3221859  57.27010084 54.27773713 34.18415828]
+</pre></div></div>
+</div>
+</section>
+<section id="id7">
+<h3>QUESTION:<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>What can you say about the values in each feature, are they similar or different?</p>
+</section>
+<section id="id8">
+<h3>(B)<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+</section>
+<section id="id9">
+<h3>EXERCISE:<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>To remove such differences, you can normalize each feature to “zero mean, unit variance”. You can do this using the <code class="docutils literal notranslate"><span class="pre">normalize_data()</span></code> function that is provided in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module. For each feature, this function subtracts the mean value of that feature, and then divides by the standard deviation. Normalize your brain data and verify the mean and standard deviation values. Write your implementation in <code class="docutils literal notranslate"><span class="pre">normalized_stats_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the
+<code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalized_stats_test</span>
+<span class="n">normalized_stats_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_data            : [T1 intensity, T1 gauss 2, T1 gauss 4, T1 gauss 6, Coordinate]
+Mean              : [-5.06476342e-14  7.29758268e-14  1.05084961e-14  1.07686391e-14
+  5.77245273e-14]
+Standard deviation: [1. 1. 1. 1. 1.]
+</pre></div></div>
+</div>
+</section>
+<section id="id10">
+<h3>(C)<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+</section>
+<section id="id11">
+<h3>EXERCISE:<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>For this question, practice doing such normalization by hand. You are given this dataset:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>person</p></th>
+<th class="head"><p>weight (kg)</p></th>
+<th class="head"><p>height (m)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Alice</p></td>
+<td><p>55</p></td>
+<td><p>1.6</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bob</p></td>
+<td><p>60</p></td>
+<td><p>1.7</p></td>
+</tr>
+<tr class="row-even"><td><p>Carol</p></td>
+<td><p>65</p></td>
+<td><p>1.8</p></td>
+</tr>
+</tbody>
+</table>
+<p>You need to find the mean and standard deviation for each feature, then calculate the normalized values. For the answer, just provide the normalized values. You can of course calculate these in Python, but you should be able to do this by hand.</p>
+</section>
+</section>
+<section id="3.-Distances">
+<h2>3. Distances<a class="headerlink" href="#3.-Distances" title="Link to this heading"></a></h2>
+<p>To understand k-Means clustering and the nearest neighbour classifier we’ll first take a closer look at distances.</p>
+<section id="id12">
+<h3>(A)<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<p>Generate a simple dataset as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">segmentation_util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">util</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_gaussian_data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">generate_gaussian_data</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Generates 2 samples per Gaussian class</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># Stretch and round the numbers</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">scatter_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x1de62e434d0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_34_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_34_1.png" />
+</div>
+</div>
+</section>
+<section id="id13">
+<h3>EXERCISE:<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<p>The numbers should be easy to work with. Get the coordinates of your datapoints by inspecting X, and compute 4x4 pairwise Euclidean distances between these points. You should be able to do such calculations by hand for 2D or 3D points. You can leave the answers as square roots, i.e. <span class="math notranslate nohighlight">\(\sqrt{5}\)</span> instead of 2.236… . Use the scatterplot to visually check if the distances you calculated make sense.</p>
+</section>
+<section id="id14">
+<h3>(B)<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<p>Now let’s compute distances with code. It is possible to create a for-loop to compute all the distances, but it’s quicker to do it for the whole matrix with Python package functionality:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id15">
+<h3>EXERCISE:<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<p>Generate a larger Gaussian dataset, with 100 samples per class, and compute the distances. <code class="docutils literal notranslate"><span class="pre">D</span></code> now has as many rows as there are samples, so we can see each row as that sample’s distances to all the others. Now use <code class="docutils literal notranslate"><span class="pre">plt.imshow()</span></code> to visualize the distance matrix as an image. Write your implementation in <code class="docutils literal notranslate"><span class="pre">distance_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module. You should see something like this:</p>
+<p><img alt="ce74ea7cbd7048a193029255944137aa" class="no-scaled-link" height="400" src="../_images/distance_matrix.png" width="400" /></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_test</span>
+<span class="n">distance_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_37_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_37_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_37_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_37_1.png" />
+</div>
+</div>
+</section>
+<section id="id16">
+<h3>QUESTION:<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<p>What structure do you see in the image and why? Vary the parameters (means and standard deviations, not the number of samples) of generate gaussian data a bit to confirm your intuition.</p>
+</section>
+<section id="id17">
+<h3>(C)<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+</section>
+<section id="id18">
+<h3>EXERCISE:<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<p>It is also possible to compute distances to some other samples not in your dataset. First create a dataset with two samples yourself, for example with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>Then compute the distances between <code class="docutils literal notranslate"><span class="pre">X</span></code> (from 1.3 (A) above) and <code class="docutils literal notranslate"><span class="pre">C</span></code>. Write your implementation in <code class="docutils literal notranslate"><span class="pre">small_samples_distance_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module. What happens if you change the order of the inputs?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">small_samples_distance_test</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">small_samples_distance_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_40_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_40_0.png" />
+</div>
+</div>
+</section>
+<section id="id19">
+<h3>(D)<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+</section>
+<section id="id20">
+<h3>EXERCISE:<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<p>Now let’s use <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">C</span></code> to figure out which samples in <code class="docutils literal notranslate"><span class="pre">X</span></code> are the closest to the first, or to the second sample. Write your implementation in <code class="docutils literal notranslate"><span class="pre">minimum_distance_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module. First plot the datasets on top of each other in different colors and visualize the data. Estimate how many points are going to be closest to each sample in <code class="docutils literal notranslate"><span class="pre">C</span></code>. Now with the distance matrix, you can do the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">min_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">min_dist</span> <span class="o">=</span> <span class="n">D</span><span class="p">[:,</span><span class="n">min_index</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Look at the values in <code class="docutils literal notranslate"><span class="pre">min_dist</span></code> and <code class="docutils literal notranslate"><span class="pre">min_index</span></code>.</p>
+<p>How can you calculate how many samples are closest to each of the samples in <code class="docutils literal notranslate"><span class="pre">C</span></code>?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimum_distance_test</span>
+<span class="n">minimum_distance_test</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Distance matrix D:
+[[ 1.41421356  0.        ]
+ [ 3.60555128  3.60555128]
+ [ 6.32455532  7.07106781]
+ [ 4.24264069  4.47213595]
+ [ 2.23606798  1.        ]
+ [10.19803903  9.05538514]]
+For each row in D, which column has the minimum value:
+[1 0 0 0 1 1]
+Minimum distances:
+[0.         3.60555128 6.32455532 4.24264069 1.         9.05538514]
+Samples in X that are closest to each of the samples in C:
+[3. 3.]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_42_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_42_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="4.-k-Means-clustering">
+<h2>4. k-Means clustering<a class="headerlink" href="#4.-k-Means-clustering" title="Link to this heading"></a></h2>
+<section id="id21">
+<h3>(A)<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+</section>
+<section id="id22">
+<h3>EXERCISE:<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<p>Generate Gaussian data <code class="docutils literal notranslate"><span class="pre">test_data</span></code> with 100 samples per class. To start the k-Means algorithm, we will first initialize some cluster centers for k-Means to start with. Define the number of clusters, e.g. <code class="docutils literal notranslate"><span class="pre">num_clusters</span> <span class="pre">=</span> <span class="pre">2</span></code>. Now select <code class="docutils literal notranslate"><span class="pre">num_clusters</span></code> rows from <code class="docutils literal notranslate"><span class="pre">X</span></code> and store them in <code class="docutils literal notranslate"><span class="pre">w_initial</span></code>. You can verify by plotting the datasets on top of each other in different colors.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">utilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">util</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_gaussian_data</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">num_clusters</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">generate_gaussian_data</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># Generates 100 samples per Gaussian class</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">test_data</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">scatter_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">num_clusters</span><span class="p">)</span>
+<span class="n">w_initial</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">,:]</span>
+<span class="n">im2</span>  <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">w_initial</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">w_initial</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;w_initial&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cluster indices: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cluster centers: </span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">w_initial</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Cluster indices: [179  95]
+Cluster centers:
+[[ 2.81804118 -1.34223374]
+ [-0.70995074  0.28571281]]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_45_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_45_1.png" />
+</div>
+</div>
+</section>
+<section id="id23">
+<h3>(B)<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
+</section>
+<section id="id24">
+<h3>EXERCISE:<a class="headerlink" href="#id24" title="Link to this heading"></a></h3>
+<p>Assume these points are the cluster centers for your data. Calculate the minimum distances using the approach from the previous exercise and look at <code class="docutils literal notranslate"><span class="pre">min_index</span></code> to find out which cluster each sample belongs to.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_initial</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+<span class="c1"># For each row/sample in D, which column has the minimum value...</span>
+<span class="c1"># (i.e. to which point in w_initial is this sample the closest)</span>
+<span class="n">min_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;min_index:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_index</span><span class="p">))</span>
+<span class="c1"># Show these minimum distances in a vector</span>
+<span class="n">min_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="o">*</span><span class="n">min_index</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)):</span>
+    <span class="n">min_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">min_index</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">min_dist</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">min_dist</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="c1"># Calculate how many samples in X are closest to each of the samples in w_initial</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w_initial</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w_initial</span><span class="p">)):</span>
+    <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">min_index</span><span class="o">==</span><span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+min_index:
+[1 1 1 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1
+ 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 1 0 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 1 1 0 1 0 1 1 1 0 0 0 1 0 0 0 0 1 0 0
+ 0 1 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 1
+ 0 1 1 0 1 0 0 0 1 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 0 1 0 0 1 0
+ 1 0 0 0 0 0 1 0 0 0 0 0 1 1 0]
+512.4225230461032
+[ 84. 116.]
+</pre></div></div>
+</div>
+</section>
+<section id="id25">
+<h3>(C)<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+</section>
+<section id="id26">
+<h3>EXERCISE:<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<p>Imagine that your cluster centers, while being randomly selected, were selected in a different order. You could achieve this with <code class="docutils literal notranslate"><span class="pre">w_initial</span> <span class="pre">=</span> <span class="pre">np.array([w_initial[1,:],</span> <span class="pre">w_initial[0,:]])</span></code>. Calculate the cluster assignments again and compare them to the previous result. If you want to use these results for segmentation of an image, what kind of problems do you expect? How could you solve this problem?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w_switched</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">w_initial</span><span class="p">[</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">w_initial</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]])</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_switched</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+<span class="c1"># For each row/sample in D, which column has the minimum value...</span>
+<span class="c1"># (i.e. to which point in w_switched is this sample the closest)</span>
+<span class="n">min_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;min_index:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_index</span><span class="p">))</span>
+<span class="c1"># Show these minimum distances in a vector</span>
+<span class="n">min_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="o">*</span><span class="n">min_index</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)):</span>
+    <span class="n">min_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">min_index</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">min_dist</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">min_dist</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="c1"># Calculate how many samples in X are closest to each of the samples in w_switched</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w_initial</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w_initial</span><span class="p">)):</span>
+    <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">min_index</span><span class="o">==</span><span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+min_index:
+[0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 1 1 0 1 1 1 1 0 1 1
+ 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 0 1 0 0
+ 1 0 0 1 0 1 1 1 0 0 1 0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 1 0 0 0 0 1 0 1 1 0 1
+ 0 1 1 1 1 1 0 1 1 1 1 1 0 0 1]
+512.4225230461032
+[116.  84.]
+</pre></div></div>
+</div>
+</section>
+<section id="id27">
+<h3>(D)<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
+</section>
+<section id="id28">
+<h3>EXERCISE:<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<p>To start optimization, we need to find out how good the current cluster assignment is. Use what you learned in the registration exercises, and in the course slides to complete the missing code in <code class="docutils literal notranslate"><span class="pre">cost_kmeans()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module. You can check that this is working by creating good or bad cluster centers by hand, and then calculating the cost.</p>
+</section>
+<section id="(E)">
+<h3>(E)<a class="headerlink" href="#(E)" title="Link to this heading"></a></h3>
+</section>
+<section id="id29">
+<h3>EXERCISE:<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
+<p>Now that we have a cost function, we can optimize it with the same method as in the registration exercises. Use the code in <code class="docutils literal notranslate"><span class="pre">kmeans_demo()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module to see the final algorithm in action. What do you notice about the updates and the cost curve?</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">kmeans_demo</span><span class="p">,</span> <span class="n">funX</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">clear_output</span>
+
+<span class="n">kmeans_cost</span> <span class="o">=</span> <span class="n">kmeans_demo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_52_0.png" src="../_images/reader_2.3_segmentation_in_feature_space_52_0.png" />
+</div>
+</div>
+</section>
+<section id="(F)">
+<h3>(F)<a class="headerlink" href="#(F)" title="Link to this heading"></a></h3>
+</section>
+<section id="id30">
+<h3>EXERCISE:<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
+<p>Now fill in the missing parts of code (parts of answers to previous questions) in <code class="docutils literal notranslate"><span class="pre">kmeans_clustering()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module.</p>
+</section>
+<section id="(G)">
+<h3>(G)<a class="headerlink" href="#(G)" title="Link to this heading"></a></h3>
+</section>
+<section id="id31">
+<h3>EXERCISE:<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<p>Load a slice for the brain/non-brain task. Normalize the data and apply the clustering classifier to it. Visualize the results. Implement all of this in the <code class="docutils literal notranslate"><span class="pre">kmeans_clustering_test()</span></code> script in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module. Depending on the features you use, you could see something like this:</p>
+<p><img alt="cd0d698065ba4c76a6084d5903833e63" class="no-scaled-link" src="../_images/kmeans_example.png" width="800" /></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">kmeans_clustering_test</span>
+
+<span class="n">kmeans_clustering_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Dice coefficient:
+0.8428856245846414
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_55_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_55_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="5.-Nearest-neighbour-classifier">
+<h2>5. Nearest neighbour classifier<a class="headerlink" href="#5.-Nearest-neighbour-classifier" title="Link to this heading"></a></h2>
+<section id="id32">
+<h3>(A)<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+</section>
+<section id="id33">
+<h3>QUESTION:<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
+<p>First compute the (square) distance matrix between all samples in your Gaussian dataset. Find the minimum distances min dist and the indices of the corresponding columns min index as before. Can you already predict what values will be returned and why?</p>
+</section>
+<section id="id34">
+<h3>(B)<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
+</section>
+<section id="id35">
+<h3>EXERCISE:<a class="headerlink" href="#id35" title="Link to this heading"></a></h3>
+<p>To make things a bit more exciting, generate two separate, small Gaussian datasets with different number of samples, but other than that the same parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">train_data</span><span class="p">,</span> <span class="n">train</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">generate_gaussian_data</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">test_data</span><span class="p">,</span> <span class="n">test</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">generate_gaussian_data</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Classify the points in <code class="docutils literal notranslate"><span class="pre">test_data</span></code>, based on their distances <code class="docutils literal notranslate"><span class="pre">d</span></code> to the points in <code class="docutils literal notranslate"><span class="pre">train_data</span></code>. Write your implementation in <code class="docutils literal notranslate"><span class="pre">distance_classification_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_classification_test</span>
+<span class="n">distance_classification_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Train data:
+[[-1.37544726 -0.20147185]
+ [ 1.37532175  0.35018996]
+ [ 0.81132805  0.94599886]
+ [ 1.16570124 -0.02923361]]
+Test data:
+[[-0.6531948  -0.61290002]
+ [ 1.90055121  0.11112392]]
+Distance matrix:
+[[0.83121703 2.24553372 2.1389233  1.91024848]
+ [3.29087862 0.5770776  1.37237868 0.74813416]]
+</pre></div></div>
+</div>
+</section>
+<section id="id36">
+<h3>QUESTION:<a class="headerlink" href="#id36" title="Link to this heading"></a></h3>
+<p>What will the dimensions of <code class="docutils literal notranslate"><span class="pre">d</span></code> be? In which position <code class="docutils literal notranslate"><span class="pre">[row,</span> <span class="pre">column]</span></code> in the matrix is the distance of the last sample from <code class="docutils literal notranslate"><span class="pre">test_data</span></code>, to the first sample of <code class="docutils literal notranslate"><span class="pre">train_data</span></code>?</p>
+</section>
+<section id="id37">
+<h3>(C)<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
+</section>
+<section id="id38">
+<h3>EXERCISE:<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<p>Implement the nearest neighbor functionality in the function <code class="docutils literal notranslate"><span class="pre">nn_classifier()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module, which takes as input a training dataset with labels, and an unlabeled test dataset, and outputs the predicted labels for the test dataset.</p>
+</section>
+<section id="id39">
+<h3>(D)<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
+</section>
+<section id="id40">
+<h3>EXERCISE:<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
+<p>Now we will evaluate the classifier you implemented using the <code class="docutils literal notranslate"><span class="pre">nn_classifier_test_samples()</span></code> script in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module. You can inspect the predicted labels by displaying them side by side with the true labels. To count how many are incorrect, use <code class="docutils literal notranslate"><span class="pre">np.sum(true_labels</span> <span class="pre">!=</span> <span class="pre">predicted_labels)</span></code>. How can you now calculate the error as a percentage? Implement the missing line of code in <code class="docutils literal notranslate"><span class="pre">classification_error()</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn_classifier_test_samples</span>
+
+<span class="n">nn_classifier_test_samples</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+True labels:
+[[0.]
+ [1.]]
+Predicted labels:
+[[1.]
+ [1.]]
+Error:
+0.5
+</pre></div></div>
+</div>
+</section>
+<section id="id41">
+<h3>(E)<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
+</section>
+<section id="id42">
+<h3>EXERCISE:<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
+<p>Inspect the function <code class="docutils literal notranslate"><span class="pre">generate_train_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module, which generates a pair of training and test datasets. Modify the code (you only need to modify the parameters mu and sigma), such that the function can produce an “easy” dataset pair with low class overlap, where you expect the classification error to be low, and a “hard” dataset pair with high class overlap, where you expect the classification error to be high. Verify this using
+<code class="docutils literal notranslate"><span class="pre">nn_classifier()</span></code> and <code class="docutils literal notranslate"><span class="pre">classification_error()</span></code>. Write your implementation in <code class="docutils literal notranslate"><span class="pre">easy_hard_data_classifier_test()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module.</p>
+<p>For the answer, also list the parameters you used for the easy and hard settings.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">easy_hard_data_classifier_test</span>
+<span class="n">easy_hard_data_classifier_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Easy dataset:
+Error:
+0.4
+Hard dataset:
+Error:
+0.7
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="6.-Brain-segmentation-example">
+<h2>6. Brain segmentation example<a class="headerlink" href="#6.-Brain-segmentation-example" title="Link to this heading"></a></h2>
+<section id="id43">
+<h3>(A)<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
+<p>Create two datasets (same slice, different subjects) for the brain/not brain classification task. Downsample the training set to 1000 pixels, this will save time during calculations. The test set should not be downsampled.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">utilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">util</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_gaussian_data</span>
+<span class="c1"># Subject 1, slice 1 is the train data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">feature_labels_train</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;brain&#39;</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">ix</span><span class="p">,:]</span>
+<span class="n">train_labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">ix</span><span class="p">,:]</span>
+<span class="c1"># Subject 3, slice 1 is the test data</span>
+<span class="n">test_data</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">,</span> <span class="n">feature_labels_test</span>  <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;brain&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id44">
+<h3>EXERCISE:<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
+<p>Train the nearest neighbor classifier on train data, apply it to test data to get <code class="docutils literal notranslate"><span class="pre">predicted_labels</span></code>, and calculate the classification error. Implement your solution in the <code class="docutils literal notranslate"><span class="pre">nn_classifier_test_brains()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn_classifier_test_brains</span>
+
+<span class="n">nn_classifier_test_brains</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Error:
+0.028194444444444446
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_70_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_70_1.png" />
+</div>
+</div>
+</section>
+<section id="id45">
+<h3>QUESTION:<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
+<p>What % of pixels are classified incorrectly? Run the code a few times, because of the data sampling you will get slightly different errors. Your answer to this question will probably be different from other groups, depending on the type of features you have previously implemented in the <code class="docutils literal notranslate"><span class="pre">extract_features</span></code> function.</p>
+</section>
+<section id="id46">
+<h3>(B)<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
+</section>
+<section id="id47">
+<h3>QUESTION:<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
+<p>Now we know, from the classification error, how many pixels are predicted to be in the wrong class. The generated images also show what the classification results look like. This visualization was created by transforming the vector of predicted labels back into an image using <code class="docutils literal notranslate"><span class="pre">np.reshape()</span></code>. We have also loaded the ground truth mask in order to compare the result.</p>
+<p>How would you describe the predicted mask? What kind of pixels are often classified incorrectly and why?</p>
+</section>
+<section id="id48">
+<h3>(C)<a class="headerlink" href="#id48" title="Link to this heading"></a></h3>
+<p>Implement the missing functionality in <code class="docutils literal notranslate"><span class="pre">dice_overlap()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module and evaluate it on your segmentation. If you have a low classification error, you should have quite a high Dice score.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn_classifier_test_brains</span>
+
+<span class="n">nn_classifier_test_brains</span><span class="p">(</span><span class="n">testDice</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Error:
+0.0359375
+Dice coefficient:
+0.944693812119269
+</pre></div></div>
+</div>
+</section>
+<section id="id49">
+<h3>(D)<a class="headerlink" href="#id49" title="Link to this heading"></a></h3>
+</section>
+<section id="id50">
+<h3>QUESTION:<a class="headerlink" href="#id50" title="Link to this heading"></a></h3>
+<p>Can you think of an image where the error would be low, but the Dice score would be low, instead of high? If this is difficult to answer, try experimenting with different 10x1 vectors predicted labels and test labels that you fill in by hand, and vary the total number of zeros and ones in each vector.</p>
+</section>
+</section>
+<section id="7.-k---Nearest-Neighbor">
+<h2>7. k - Nearest Neighbor<a class="headerlink" href="#7.-k---Nearest-Neighbor" title="Link to this heading"></a></h2>
+<section id="id51">
+<h3>(A)<a class="headerlink" href="#id51" title="Link to this heading"></a></h3>
+</section>
+<section id="id52">
+<h3>EXERCISE:<a class="headerlink" href="#id52" title="Link to this heading"></a></h3>
+<p>Add the functionality below to <code class="docutils literal notranslate"><span class="pre">knn_classifier()</span></code>, which is similar to <code class="docutils literal notranslate"><span class="pre">nn_classifier()</span></code> but includes an additional input <code class="docutils literal notranslate"><span class="pre">k</span></code>. Instead of finding only the minimum distance using <code class="docutils literal notranslate"><span class="pre">scipy.spatial.distance.cdist()</span></code> and <code class="docutils literal notranslate"><span class="pre">np.argmin()</span></code>, you now need to find <code class="docutils literal notranslate"><span class="pre">k</span></code> minimum distances, then make <code class="docutils literal notranslate"><span class="pre">k</span></code> predictions for the labels, and then combine the <code class="docutils literal notranslate"><span class="pre">k</span></code> predictions into a final label. The code for this is already given below (so you just need to copy+paste it):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sort_ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sort_ix_k</span> <span class="o">=</span> <span class="n">sort_ix</span><span class="p">[:,:</span><span class="n">k</span><span class="p">]</span> <span class="c1"># Get the k smallest distances</span>
+<span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">train_labels</span><span class="p">[</span><span class="n">sort_ix_k</span><span class="p">]</span>
+<span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">predicted_labels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can find <code class="docutils literal notranslate"><span class="pre">knn_classifier()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation.py</span></code> module.</p>
+</section>
+<section id="id53">
+<h3>QUESTION:<a class="headerlink" href="#id53" title="Link to this heading"></a></h3>
+<p>To make sure you understand the code, assume that you have a training set of 10 samples, a test set of 5 samples, and you are using a 3-nearest neighbor classifier. What are the dimensions of the variables <code class="docutils literal notranslate"><span class="pre">sort_ix</span></code>, <code class="docutils literal notranslate"><span class="pre">sort_ix_k</span></code>, <code class="docutils literal notranslate"><span class="pre">predicted_labels_k</span></code> and <code class="docutils literal notranslate"><span class="pre">predicted_labels</span></code>?</p>
+</section>
+<section id="id54">
+<h3>(B)<a class="headerlink" href="#id54" title="Link to this heading"></a></h3>
+</section>
+<section id="id55">
+<h3>EXERCISE:<a class="headerlink" href="#id55" title="Link to this heading"></a></h3>
+<p>Load your brain/not brain datasets for two different subjects (one subject for training, another one for testing). Subsample the training set to 100 samples. Look at the code in <code class="docutils literal notranslate"><span class="pre">knn_curve()</span></code> in <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">SECTION</span> <span class="pre">1</span></code> of the <code class="docutils literal notranslate"><span class="pre">segmentation_tests.py</span></code> module, modify the values of <code class="docutils literal notranslate"><span class="pre">k</span></code>, and test the code several times. Note that to save time, the <strong>scikit-learn</strong> implementation of k-NN could be used.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">segmentation_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">knn_curve</span>
+
+<span class="n">knn_curve</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+k = 1, iter = 0
+k = 1, iter = 1
+k = 1, iter = 2
+k = 3, iter = 0
+k = 3, iter = 1
+k = 3, iter = 2
+k = 5, iter = 0
+k = 5, iter = 1
+k = 5, iter = 2
+k = 9, iter = 0
+k = 9, iter = 1
+k = 9, iter = 2
+k = 15, iter = 0
+k = 15, iter = 1
+k = 15, iter = 2
+k = 25, iter = 0
+k = 25, iter = 1
+k = 25, iter = 2
+k = 100, iter = 0
+k = 100, iter = 1
+k = 100, iter = 2
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_2.3_segmentation_in_feature_space_80_1.png" src="../_images/reader_2.3_segmentation_in_feature_space_80_1.png" />
+</div>
+</div>
+</section>
+<section id="id56">
+<h3>QUESTION:<a class="headerlink" href="#id56" title="Link to this heading"></a></h3>
+<p>Describe in your own words what the code does.</p>
+</section>
+<section id="id57">
+<h3>(C)<a class="headerlink" href="#id57" title="Link to this heading"></a></h3>
+</section>
+<section id="id58">
+<h3>QUESTION:<a class="headerlink" href="#id58" title="Link to this heading"></a></h3>
+<p>What would you say is a good value of k? You might want to repeat the above a few times to get a better estimate of the performance. How could you estimate the error at k = 100, without evaluating the classifier? Does a lower error always equal to higher Dice (and vice versa)?</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="2.2_Validation_in_medical_image_analysis_part_2.html" class="btn btn-neutral float-left" title="Topic 2.2: Validation in medical image analysis (Segmentation)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="2.4_graph_cuts.html" class="btn btn-neutral float-right" title="Topic 2.4: Graph-cuts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

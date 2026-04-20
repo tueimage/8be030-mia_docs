@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic 1.3: Image similarity metrics &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 1.4: Intensity-based registration" href="1.4_Intensity-based_registration.html" />
+    <link rel="prev" title="Topic 1.2: Point-based registration" href="1.2_Point-based_registration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Topic 1.3: Image similarity metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-Probability-theory">1. Probability theory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Random-variables">Random variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Probability-mass-function-(a.k.a-probability-distribution-table)">Probability mass function (a.k.a probability distribution table)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Probability-density-function">Probability density function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Bayes’-rule">Bayes’ rule</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Image-similarity-metrics">2. Image similarity metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.1:"><em>Question 2.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.0-Sum-of-square-differences">2.0 Sum of square differences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.1.-Normalized-cross-correlation">2.1. Normalized cross-correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.1.1:"><em>Exercise 2.1.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.1.2:"><em>Exercise 2.1.2:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.1.1:"><em>Question 2.1.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.2.-Joint-histogram">2.2. Joint histogram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.2.1:"><em>Exercise 2.2.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.2.1:"><em>Question 2.2.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.3-Mutual-Information">2.3 Mutual Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.3.1:"><em>Exercise 2.3.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.3.2:"><em>Exercise 2.3.2:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exercise-2.3.3:"><em>Exercise 2.3.3:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.3.1:"><em>Question 2.3.1:</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2.3.2:"><em>Question 2.3.2:</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6_Registration_project.html">Project 1: Image registration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Topic 1.3: Image similarity metrics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/1.3_Image_similarity_metrics.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Topic-1.3:-Image-similarity-metrics">
+<h1>Topic 1.3: Image similarity metrics<a class="headerlink" href="#Topic-1.3:-Image-similarity-metrics" title="Link to this heading"></a></h1>
+<p>This notebook combines theory and exercises on image similarity metrics in medical image analysis. Implement all functions in the <code class="docutils literal notranslate"><span class="pre">code</span></code> folder of your cloned repository, and test it in this notebook after implementation by importing your functions to this notebook. Use available markdown sections to fill in your answers to questions as you proceed through the notebook.</p>
+<p><strong>Contents:</strong></p>
+<ol class="arabic">
+<li><p>Probability theory</p>
+<ul class="simple">
+<li><p>Random variables</p></li>
+<li><p>Probability mass function</p></li>
+<li><p>Probability density function</p></li>
+<li><p>Bayes’ rule</p></li>
+</ul>
+</li>
+<li><p>Image similarity metrics</p>
+<p>2.0 Sum of squared differences</p>
+<p>2.1 Normalized cross-correlation</p>
+<p>2.2 Joint histogram</p>
+<p>2.3 Mutual information</p>
+</li>
+</ol>
+<p><strong>References:</strong></p>
+<p>[1] Image similarity metrics: <a class="reference external" href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.464.5408&amp;rep=rep1&amp;type=pdf">Fitzpatrick, J.M., et al. Image registration, section 8.5.1</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div id="prob_theory"></div><div style="float:right;margin:-5px 5px"><p><img alt="a7faceb5442342e28d1a94338c4131c6" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="1.-Probability-theory">
+<h2>1. Probability theory<a class="headerlink" href="#1.-Probability-theory" title="Link to this heading"></a></h2>
+<div id="rand_var"></div><section id="Random-variables">
+<h3>Random variables<a class="headerlink" href="#Random-variables" title="Link to this heading"></a></h3>
+<p>Random variables map the outcomes of random phenomena to numbers. Remember the example with coin tossing in the lecture? There, we had a random variable <span class="math notranslate nohighlight">\(X\)</span> (outcome of the coin toss), and another random variable <span class="math notranslate nohighlight">\(Y\)</span> (the number of heads in a series of 3 tosses). To represent possible values and the respective probabilities of the magnitude of a random variable, we use probability distribution functions. In a similar way, we can define medical image intensities as random variables.</p>
+<div id="pmf"></div></section>
+<section id="Probability-mass-function-(a.k.a-probability-distribution-table)">
+<h3>Probability mass function (a.k.a probability distribution table)<a class="headerlink" href="#Probability-mass-function-(a.k.a-probability-distribution-table)" title="Link to this heading"></a></h3>
+<p>Random phenomenon: Pick a random pixel location. In this case, the pixel intensity can be treated as a random variable. Each outcome from the random phenomenon we are studying can be associated with a probability. If a random variable <span class="math notranslate nohighlight">\(X\)</span> can have a finite set of possible values, we can define a function that maps each possible value to a probability. This function is called <strong>probability mass function</strong> (PMF), and expresses a <em>discrete probability distribution</em>.</p>
+<p>Probability mass function:</p>
+<p><span class="math notranslate nohighlight">\(p_{X}(x) = P(X = x)\)</span></p>
+<center width="100%"><p><img alt="be96080ae0d4477688baa44b2f2f02d0" class="no-scaled-link" src="../_images/pmf.png" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://tinyheero.github.io/2016/03/17/prob-distr.html">Fong Chun Chan’s Blog</a></p>
+<p>What if we have two random variables? For example, the pixel intensity in two images. In such case, we can define a joint probability mass function:</p>
+<p><span class="math notranslate nohighlight">\(p_{X,Y}(x,y) = P(X = x, Y = y)\)</span></p>
+<p>PMF can be used to determine the probability of an observation being exactly equal to a discrete target value. But how can we define the probability mass function for the image intensities? We can use image histogram for this purpose by counting the number of occurrences of each intensity value in the image. In order to treat the counts of the histogram as probability values, we must normalize the histogram in such a way that all values sum to 1. This is the probability mass function for the
+pixel intensity as a random variable.</p>
+<div id="pdf"></div></section>
+<section id="Probability-density-function">
+<h3>Probability density function<a class="headerlink" href="#Probability-density-function" title="Link to this heading"></a></h3>
+<p>Probability mass function is defined for discrete random variables. In case of continuous random variables, however, their probabilities are not directly measurable, and we therefore calculate the probability as the proportion of times. Imagine you had a random variable that measured the price of a diamond. Now, what is the probability that a single diamond’s price is exactly equal to e.g. 150 USD? The probability of getting a diamond for that exact price would be very low, if any at all.
+Therefore, a given value of a variable on a continuous scale cannot be assigned a probability. We therefore need to think in terms of intervals instead of individual outcomes. For continuous random variables, which can take infinite number of possible values, we can define the <strong>probability density function</strong> (PDF), where the probability of <span class="math notranslate nohighlight">\(y \in [a,b]\)</span> is equivalent to the integral of the PDF between <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>:</p>
+<p><span class="math notranslate nohighlight">\(P(a \leq y \leq b) = \int_{a}^{b}\,f(Y)\,dy\)</span></p>
+<center width="100%"><p><img alt="58b8d4e9884444228aade67bd3e8d2c0" class="no-scaled-link" src="../_images/pdf.png" width="500" /></p>
+</center><p>Figure from <a class="reference external" href="https://tinyheero.github.io/2016/03/17/prob-distr.html">Fong Chun Chan’s Blog</a></p>
+<div id="bayes"></div></section>
+<section id="Bayes’-rule">
+<h3>Bayes’ rule<a class="headerlink" href="#Bayes’-rule" title="Link to this heading"></a></h3>
+<p>Bayes’ rule is a very useful formula that we will use later in the computer-aided diagnosis notebooks of this course. The so-called Bayes’ theorem gives the probability of an event based on new information that is, or may be related, to that event. Mathematically, the Bayes’ theorem can be expressed as follow:</p>
+<p><span class="math notranslate nohighlight">\(p_{X|Y} = \frac{p_{Y|X}(x|y)p_{Y}(y)}{p_{X}(x)}\)</span> ,</p>
+<p>where <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are events and <span class="math notranslate nohighlight">\(P(Y) \neq 0\)</span>, and:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(p_{X|Y}\)</span> is the probability of event <span class="math notranslate nohighlight">\(X\)</span> occurring given event <span class="math notranslate nohighlight">\(Y\)</span> is true; also known as the posterior probability of <span class="math notranslate nohighlight">\(X\)</span> given <span class="math notranslate nohighlight">\(Y\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p_{Y|X}(x|y)\)</span> is the likelihood of <span class="math notranslate nohighlight">\(X\)</span> given a fixed <span class="math notranslate nohighlight">\(Y\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p_{X}(x)\)</span> and <span class="math notranslate nohighlight">\(p_{Y}(y)\)</span> are the probabilities of observing the two events without any given conditions; also known as marginal or prior probabilities</p></li>
+<li><p><span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are events (must not be the same)</p></li>
+</ul>
+<p>Bayes’ theorem is typically utilized in diagnostic decision-making, e.g. to find out if there is a certain clinical manifestation in a patient before images are acquired. Given the prevalence of a disease, a radiologist is able to first estimate the marginal probability of the disease and afterwards assess medical images based on this prior. The Bayes’ rule enables to derive positive predictive and negative predictive values in radiologists’ pre-assessment tasks. Furthermore, this probability
+theorem also has its utility in cases with similar imaging findings in different diagnoses to calculate the probability at which certain imaging characteristics pertain to rare or common diagnoses (regardless of complete clinical contexts). The Bayes’ theorem is also used in algorithms for medical image artefact corrections, such as in MRI and perfusion-weighted images to reduce noise. Bayesian inference has a wide range of applications in AI-driven radiology software.</p>
+<div id="img_sim_metrics"></div><div style="float:right;margin:-5px 5px"><p><img alt="5166383e81c74d51ac108850d85a1d3f" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div></section>
+</section>
+<section id="2.-Image-similarity-metrics">
+<h2>2. Image similarity metrics<a class="headerlink" href="#2.-Image-similarity-metrics" title="Link to this heading"></a></h2>
+<p>Due to the prevalence of 3D volumes in medical imaging, the term <em>voxel similarity measures</em> is typically used to jointly address these methods. In practice, algorithms perform registration between two images based on a voxel subset, which is either randomly chosen or defined by a grid. In other applications, segmentation algorithms aid registration by preselecting a subset of voxels comprising specific regions of interest. At last, similarity measures may be applied on e.g. image gradients
+instead of voxel values themselves. More details on image similarity metrics can be found in <a class="reference external" href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.464.5408&amp;rep=rep1&amp;type=pdf">Fitzpatrick, J.M., et al. Image registration, section 8.5.1</a>.</p>
+<p>In this section, you will implement two such image similarity metrics: correlation and mutual information. The computation of the mutual information between two images relies on their joint histogram, so one of the exercises deals with the implementation of this intermediate step. In the project work section you will use the similarity metrics to find the optimal rotation transformation that aligns two images.</p>
+<p>Before you start, load your favorite test image in Python. You’re going to use this image to test your implementation. Some of the examples below assume you work with images of type <code class="docutils literal notranslate"><span class="pre">uint8</span></code>, i.e. pixel intensities in the <span class="math notranslate nohighlight">\([0, 255]\)</span> range, but the provided functions are equipped to work with arbitrary image types.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="b43dcab8e27f4e029fa3d89515804c2d" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div><section id="Question-2.1:">
+<h3><em>Question 2.1:</em><a class="headerlink" href="#Question-2.1:" title="Link to this heading"></a></h3>
+<p>How can we measure the quality of a registration task? Which consideration is important when selecting target points for which we measure registration performance?</p>
+<p>Type your answer here</p>
+<div id="ssd"></div></section>
+<section id="2.0-Sum-of-square-differences">
+<h3>2.0 Sum of square differences<a class="headerlink" href="#2.0-Sum-of-square-differences" title="Link to this heading"></a></h3>
+<p>Let <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span> be two images and <span class="math notranslate nohighlight">\(i\)</span> the pixel locations. A simple and intuitive intensity-based measure of the similarity of <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span> is the sum of squared differences (SSD). The SSD will be equal to zero provided that both images are correctly aligned, and will grow with increasing registration error (misalignment). If <span class="math notranslate nohighlight">\(I\)</span> is the fixed image in a registration problem, and <span class="math notranslate nohighlight">\(J\)</span> is the moving image transformed with a transformation <span class="math notranslate nohighlight">\(T\)</span>, the
+similarity measure will be a function of the transformation. It can be shown that this measure is optimal when two images differ only by Gaussian noise. This is an implicit assumption of this measure, which does not hold for inter-modality registration, and is rarely true for intra-modality registration (e.g. MRI noise is non-Gaussian due to artifacts, which leads to changes between acquisitions, etc.). Nevertheless, SSD can still be successfully used in intra-modality registration. A possible
+drawback of this similarity measure is that it can be sensitive to “outlier” intensity differences. An SSD algorithm can be denoted as finding the transformation <em>T</em> to minimize for images <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span>:</p>
+<p><span class="math">\begin{equation}
+\mathbf{SSD} = \sum_{i}|I(i) - B^\prime(i)|^{2}\,\,\,\,\,\,\, \forall\,i \in A \cap B^\prime$
+\end{equation}</span></p>
+<div id="ncc"></div></section>
+<section id="2.1.-Normalized-cross-correlation">
+<h3>2.1. Normalized cross-correlation<a class="headerlink" href="#2.1.-Normalized-cross-correlation" title="Link to this heading"></a></h3>
+<p>Another measure making slightly less assumptions is called (normalized) cross-correlation (CC). Normalized CC assumes there is a linear relationship between pixel intensities in two images, which frequently is the case for registration of images acquired with the same modality. The normalized cross-correlation between two images <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span> with pixels <span class="math notranslate nohighlight">\(i\)</span> and respective mean intensities <span class="math notranslate nohighlight">\(\overline{I}\)</span> and <span class="math notranslate nohighlight">\(\overline{J}\)</span> is:</p>
+<p><span class="math">\begin{equation}
+C=\frac{\sum_{i=1}^{n}(I(i)-\overline{I})(J(i)-\overline{J})}{\sqrt{\sum_{i=1}^{n}(I(i)-\overline{I})^{2} \sum_{j=1}^{n}(J(i)-\overline{J})^{2}}}
+\end{equation}</span></p>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of image pixels. If we reshape the 2D images to vectors (in Python this can be done with <code class="docutils literal notranslate"><span class="pre">numpy.reshape()</span></code>), the expression for the normalized cross-correlation can be rewritten using vector multiplication operators (which will also make it more clear how to implement it in Python):</p>
+<p><span class="math">\begin{equation}
+C=\frac{(\mathbf{u}-\overline{I})^{\top}(\mathbf{v}-\overline{J})}{\sqrt{(\mathbf{u}-\overline{I})^{\mathrm{T}}(\mathbf{u}-\overline{I})} \sqrt{(\mathbf{v}-\overline{J})^{\mathrm{T}}(\mathbf{v}-\overline{J})}}
+\end{equation}</span></p>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> are vectors of the pixels intensities of the images <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span>, respectively:</p>
+<p><span class="math">\begin{equation}
+u=\left[ \begin{array}{c}{I(1)} \\ {I(2)} \\ {\vdots} \\ {I(n)}\end{array}\right], v=\left[ \begin{array}{c}{J(1)} \\ {J(2)} \\ {\vdots} \\ {J(n)}\end{array}\right]
+\end{equation}</span></p>
+<div style="float:right;margin:-5px 5px"><p><img alt="e5626598b7d8427993578a4a22efc629" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.1.1:">
+<h3><em>Exercise 2.1.1:</em><a class="headerlink" href="#Exercise-2.1.1:" title="Link to this heading"></a></h3>
+<p>The provided function <code class="docutils literal notranslate"><span class="pre">correlation()</span></code> in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">3</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module contains a template for implementing the normalized cross-correlation metric. Most of the functionality such as parameter checking and pre-processing of the images is already implemented. The only piece of code that is missing is the computation of the normalized cross-correlation using the equation above.</p>
+<p>Implement the missing functionality in the <code class="docutils literal notranslate"><span class="pre">correlation()</span></code> function. Note that the mean intensity is already subtracted from the images.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="f06ea0ae3cb04472acf7c3cbfdad8822" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.1.2:">
+<h3><em>Exercise 2.1.2:</em><a class="headerlink" href="#Exercise-2.1.2:" title="Link to this heading"></a></h3>
+<p>Test your implementation using the template <code class="docutils literal notranslate"><span class="pre">correlation_test()</span></code> script provided in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">3</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code> module. For example, you can make sure that <code class="docutils literal notranslate"><span class="pre">correlation(I,I)</span></code>, i.e. the normalized cross-correlation of any image with itself, returns 1. Use some other properties of normalized cross-correlation in order to further test your implementation. (<strong>Tip</strong>: How does a linear transformation of the intensities of the images affect the normalized cross-correlation
+coefficient?)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">correlation_test</span>
+
+<span class="n">correlation_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[2]</span><span class="ansi-green-fg">, line 6</span>
+<span class="ansi-green-fg">      3</span> sys.path.append(<span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">../code</span><span class="ansi-yellow-fg">&#34;</span>)
+<span class="ansi-green-fg">      4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">registration_tests</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">import</span> correlation_test
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">6</span> <span class="ansi-yellow-bg">correlation_test</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">d:\Developer\GitHub\8be030-mia\reader\../code\registration_tests.py:191</span>, in <span class="ansi-cyan-fg">correlation_test</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">    189</span> I = plt.imread(<span class="ansi-yellow-fg">&#39;</span><span class="ansi-yellow-fg">../data/cameraman.tif</span><span class="ansi-yellow-fg">&#39;</span>)
+<span class="ansi-green-fg">    190</span> Th = util.t2h(reg.identity(), np.array([<span class="ansi-green-fg">10</span>,<span class="ansi-green-fg">20</span>]))
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">191</span> J, _ = <span class="ansi-yellow-bg">reg</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">image_transform</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">I</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">Th</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    193</span> C1 = reg.correlation(I, I)
+<span class="ansi-green-fg">    194</span> <span style="color: rgb(95,135,135)"># the self correlation should be very close to 1</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">d:\Developer\GitHub\8be030-mia\reader\../code\registration.py:122</span>, in <span class="ansi-cyan-fg">image_transform</span><span class="ansi-blue-fg">(I, Th, output_shape)</span>
+<span class="ansi-green-fg">    116</span> Xh = util.c2h(X)
+<span class="ansi-green-fg">    118</span> <span style="color: rgb(95,135,135)">#------------------------------------------------------------------#</span>
+<span class="ansi-green-fg">    119</span> <span style="color: rgb(95,135,135)"># TODO: Perform inverse coordinates mapping.</span>
+<span class="ansi-green-fg">    120</span> <span style="color: rgb(95,135,135)">#------------------------------------------------------------------#</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">122</span> It = ndimage.map_coordinates(I, [<span class="ansi-yellow-bg">Xt</span>[<span class="ansi-green-fg">1</span>,:], Xt[<span class="ansi-green-fg">0</span>,:]], order=<span class="ansi-green-fg">1</span>, mode=<span class="ansi-yellow-fg">&#39;</span><span class="ansi-yellow-fg">constant</span><span class="ansi-yellow-fg">&#39;</span>).reshape(output_shape)
+<span class="ansi-green-fg">    124</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> It, Xt
+
+<span class="ansi-red-fg">NameError</span>: name &#39;Xt&#39; is not defined
+</pre></div></div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="c6d9be5ed1274159ad86766f32bf0769" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2.1.1:">
+<h3><em>Question 2.1.1:</em><a class="headerlink" href="#Question-2.1.1:" title="Link to this heading"></a></h3>
+<p>Under which assumptions is the normalized cross-correlation the optimal similarity metric?</p>
+<p>Type your answer here</p>
+<div id="jointhist"></div></section>
+<section id="2.2.-Joint-histogram">
+<h3>2.2. Joint histogram<a class="headerlink" href="#2.2.-Joint-histogram" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">joint_histogram()</span></code> function in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">3</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module contains an almost complete implementation of computation of the joint histogram of two images. We use the joint histogram as an estimate of the joint probability mass function (PMF) of two images. This function informs us of the probability that two intensities co-occur (appear together) at the same location in the two images.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="f0fb6978e3c9489cae6892b46e03b02b" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.2.1:">
+<h3><em>Exercise 2.2.1:</em><a class="headerlink" href="#Exercise-2.2.1:" title="Link to this heading"></a></h3>
+<p>Go over the implementation and make sure you understand the functionality of all the steps in the code. Implement the last missing step in the computation of the joint histogram.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="0d301638ce97444db3e63ac16de8a967" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2.2.1:">
+<h3><em>Question 2.2.1:</em><a class="headerlink" href="#Question-2.2.1:" title="Link to this heading"></a></h3>
+<p>One of the parameters of the function is num bins, which defines the number of bins of the joint histogram. The default value for this parameter in this implementation is chosen to be 16. We mostly work with 8-bit images that have 256 possible values for the pixel intensities, which means that num bins can go as high as 256. However, there is a trade-off between choosing num bins too low or too high. What is this trade-off?</p>
+<p>Type your answer here</p>
+<div id="mi"></div></section>
+<section id="2.3-Mutual-Information">
+<h3>2.3 Mutual Information<a class="headerlink" href="#2.3-Mutual-Information" title="Link to this heading"></a></h3>
+<p>Compared to the above measures, mutual information (MI) makes very few a priori assumptions about registered objects, which is why it can be applied to larger dimensional registration and many other imaging situations.</p>
+<p>Intuitively, MI tries to find out how much information we have about the pixel intensity at the same location in image <span class="math notranslate nohighlight">\(J\)</span> provided that we know the pixel intensity value at some location in the fixed image <span class="math notranslate nohighlight">\(I\)</span>. MI is therefore essentially a reduction in the uncertainty of <span class="math notranslate nohighlight">\(Y\)</span> due to the knowledge of <span class="math notranslate nohighlight">\(I\)</span>. Given the joint PMF of two images and the two marginal PMF’s, the mutual information between the two images can be computed with the following formula:</p>
+<p><span class="math">\begin{equation}
+M I(I, J)=\sum_{i=1}^{n} \sum_{j=1}^{n} p_{I, J}(i, j) \log \frac{p_{I, J}(i, j)}{p_{I}(i) p_{J}(j)}
+\end{equation}</span></p>
+<p>The unit of MI depends on the particular log function: when using the natural logarithm, the unit is nats, when using base 2 logarithm, the unit is bits. In its essence, MI is a measure of the “compactness” of the joint PMF of two images. When the two images are well registered, the joint PMF is compact. When the two images are not well aligned the joint PMF is “spread out”.</p>
+<p>Remember that the joint histogram is an estimate of the joint PMF. Thus, in the previous equation, we can “plug in” the joint histogram for <span class="math notranslate nohighlight">\(p_{I, J}\)</span>, and analogously, the marginal histograms (the histograms of the individual images) for <span class="math notranslate nohighlight">\(p_{I}\)</span> and <span class="math notranslate nohighlight">\(p_{J}\)</span>. The two sum operators go over all bins in the joint histogram.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="7f641a1e85be49fdb0f798d819ea02be" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.3.1:">
+<h3><em>Exercise 2.3.1:</em><a class="headerlink" href="#Exercise-2.3.1:" title="Link to this heading"></a></h3>
+<p>A template for implementation of mutual information given a joint histogram of two images is given in the Python function <code class="docutils literal notranslate"><span class="pre">mutual_information()</span></code> in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">3</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module. As before, the file already contains all the pre-processing steps but the actual computation of the mutual information is missing. The only missing piece of code in the template file is implementation of the above formula for mutual information. Implement the missing functionality.</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="b2ec626c13b6406080c8ffe49200953e" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.3.2:">
+<h3><em>Exercise 2.3.2:</em><a class="headerlink" href="#Exercise-2.3.2:" title="Link to this heading"></a></h3>
+<p>Use some of the properties of mutual information to test your implementation. Write these tests in the provided <code class="docutils literal notranslate"><span class="pre">mutual_information_test()</span></code> script in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">3</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration_tests.py</span></code> module. (<strong>Tip</strong>: What would be the mutual information of two random noise images? You can generate random noise <code class="docutils literal notranslate"><span class="pre">uint8</span></code> images with <code class="docutils literal notranslate"><span class="pre">np.random.randint(255,</span> <span class="pre">size=(512,</span> <span class="pre">512))</span></code>)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">mutual_information_test</span>
+
+<span class="n">mutual_information_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="966bb01d4a164bd6bac3c257b3c21a72" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Exercise-2.3.3:">
+<h3><em>Exercise 2.3.3:</em><a class="headerlink" href="#Exercise-2.3.3:" title="Link to this heading"></a></h3>
+<p>An alternative formula for mutual information is:</p>
+<div class="math notranslate nohighlight">
+\[MI(I,J)=H(I)+H(J)-H(I, J)\]</div>
+<p>In the previous equation, <span class="math notranslate nohighlight">\(H(I)\)</span> and <span class="math notranslate nohighlight">\(H(J)\)</span> is the entropy of the images <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span> and <span class="math notranslate nohighlight">\(H(I,J)\)</span> is their joint entropy.</p>
+<p>Find out the equation for the entropy and implement mutual information, using this formula, in the <code class="docutils literal notranslate"><span class="pre">mutual_information_e()</span></code> function in <code class="docutils literal notranslate"><span class="pre">SECTION</span> <span class="pre">3</span></code> of the <code class="docutils literal notranslate"><span class="pre">registration.py</span></code> module. Test your implementation with the provided <code class="docutils literal notranslate"><span class="pre">mutual_information_e_test()</span></code> script. Make sure that both implementations output equal values (very small differences are possible due to rounding errors).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">mutual_information_e_test</span>
+
+<span class="n">mutual_information_e_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="9d6d7e2c30194fc48903e6dd89e20371" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2.3.1:">
+<h3><em>Question 2.3.1:</em><a class="headerlink" href="#Question-2.3.1:" title="Link to this heading"></a></h3>
+<p>When is mutual information preferable over sum of squared errors and normalized cross-correlation as an image similarity metric? Motivate your answer.</p>
+<p>Type your answer here</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="ea42c2920de24354a83fc7a58f1c18b0" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2.3.2:">
+<h3><em>Question 2.3.2:</em><a class="headerlink" href="#Question-2.3.2:" title="Link to this heading"></a></h3>
+<p>The output of <code class="docutils literal notranslate"><span class="pre">mutual_information()</span></code> is described as “<em>mutual information in nat units</em>”. What change in the code would you have to make to output the mutual information in bits? Does it make a difference which units you output when you use the mutual information metric in practice (for example, to perform image registration)?</p>
+<p>Type your answer here</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="1.2_Point-based_registration.html" class="btn btn-neutral float-left" title="Topic 1.2: Point-based registration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="1.4_Intensity-based_registration.html" class="btn btn-neutral float-right" title="Topic 1.4: Intensity-based registration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

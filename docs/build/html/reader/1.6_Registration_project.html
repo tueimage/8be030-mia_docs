@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project 1: Image registration &mdash; Medical Image Analysis (8BE030) v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=34cd777e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Topic 2.1: Exercises - Image segmentation" href="2.1_segmentation_introduction.html" />
+    <link rel="prev" title="Topic 1.5: Validation in medical image analysis (Registration)" href="1.5_Validation_in_medical_image_analysis_part_1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Medical Image Analysis (8BE030)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Software guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0.1_Software_guide.html">Help for Jupyter and Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image registration</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1.1_Geometrical_transformations.html">Topic 1.1: Geometrical transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2_Point-based_registration.html">Topic 1.2: Point-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3_Image_similarity_metrics.html">Topic 1.3: Image similarity metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4_Intensity-based_registration.html">Topic 1.4: Intensity-based registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5_Validation_in_medical_image_analysis_part_1.html">Topic 1.5: Validation in medical image analysis (Registration)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project 1: Image registration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Goal">Goal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Deliverables">Deliverables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Assessment">Assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Preliminary-guided-project-work">Preliminary guided project work</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#A.-Getting-started">A. Getting started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Dataset">Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-1:"><em>Question 1</em>:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Selecting-corresponding-point-pairs">Selecting corresponding point pairs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Task-1:"><em>Task 1</em>:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#B.-Point-based-registration">B. Point-based registration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Point-based-affine-image-registration">Point-based affine image registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Evaluation-of-point-based-affine-image-registration">Evaluation of point-based affine image registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Question-2:"><em>Question 2</em>:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#C.-Intensity-based-registration">C. Intensity-based registration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Comparing-the-results-of-different-registration-methods">Comparing the results of different registration methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Task-2:"><em>Task 2</em>:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Open-ended-project-work">Open-ended project work</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Image segmentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2.1_segmentation_introduction.html">Topic 2.1: Exercises - Image segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_Validation_in_medical_image_analysis_part_2.html">Topic 2.2: Validation in medical image analysis (Segmentation)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_segmentation_in_feature_space.html">Topic 2.3: Segmentation in feature space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.4_graph_cuts.html">Topic 2.4: Graph-cuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.5_active_shape_models.html">Topic 2.5: Active shape models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.6_segmentation_project.html">Project 2: Image segmentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Medical Image Analysis (8BE030)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Project 1: Image registration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reader/1.6_Registration_project.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Project-1:-Image-registration">
+<h1>Project 1: Image registration<a class="headerlink" href="#Project-1:-Image-registration" title="Link to this heading"></a></h1>
+<p><strong>Contents:</strong></p>
+<ul>
+<li><p><a class="reference internal" href="#Goal"><span class="std std-ref">Goal</span></a></p></li>
+<li><p><a class="reference internal" href="#Deliverables"><span class="std std-ref">Deliverables</span></a></p></li>
+<li><p><a class="reference internal" href="#Assessment"><span class="std std-ref">Assessment</span></a></p></li>
+<li><p>Preliminary guided project work</p>
+<ol class="upperalpha simple">
+<li><p>Getting started</p></li>
+</ol>
+<ul class="simple">
+<li><p><a class="reference internal" href="#Dataset"><span class="std std-ref">Dataset</span></a></p></li>
+<li><p>Selecting corresponding point pairs</p></li>
+</ul>
+<ol class="upperalpha simple" start="2">
+<li><p>Point-based registration</p></li>
+</ol>
+<ul class="simple">
+<li><p>Point-based affine image registration</p></li>
+<li><p>Evaluation of point-based affine image registration</p></li>
+</ul>
+<ol class="upperalpha simple" start="3">
+<li><p>Intensity-based registration</p></li>
+</ol>
+<ul class="simple">
+<li><p>Comparing the results of different registration methods</p></li>
+</ul>
+</li>
+<li><p>Open-ended project work</p></li>
+</ul>
+<div id="goal"></div><div style="float:right;margin:-5px 5px"><p><img alt="51524b2997cb4f87bee715018373f48f" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="Goal">
+<h2>Goal<a class="headerlink" href="#Goal" title="Link to this heading"></a></h2>
+<p>Develop Python code for point-based and intensity-based (medical) image registration. Propose and investigate a suitable research question of your choice. Use the developed code to perform image registration and evaluate and analyze the results.</p>
+<p>The dataset you will be using in the first project originates from the <a class="reference external" href="http://mrbrains13.isi.uu.nl/">MRBrainS medical image analysis challenge</a>. It consists of 18 traverse slices of MR brain scans with two different sequences: T1-weighted and T2-FLAIR (3 patients <span class="math notranslate nohighlight">\(\times\)</span> 3 slices per patient <span class="math notranslate nohighlight">\(\times\)</span> 2 modalities). Please see the Getting started assignment below for more details on the dataset.</p>
+<p>The assignment consists of two parts, as a first step there is preliminary guided project work, and as a second step you must investigate a suitable research question based on the methods you have developed. A research question based on the preliminary guided project work below, completing the programming tasks and answering the theory questions, is the minimal solution to this project. If this is done well and accompanied by a suitable report, this will be graded with a ‘sufficient’ grade. To
+achieve higher grades, you need to go beyond the minimal solution. You should use what you have implemented and the available data to come up with and answer a suitable research question. Write about this in your report.</p>
+<div id="deliverables"></div></section>
+<section id="Deliverables">
+<h2>Deliverables<a class="headerlink" href="#Deliverables" title="Link to this heading"></a></h2>
+<p>A completed version of this notebook, the documented python code that you developed, and a report describing your research question, results and analysis. The report is expected in a short, concise format. It focusses on your specific research questions, results and discussion. The lecturers already know the background, the data and the general methodology. Your report therefore does not need to include an introduction on the clinical problem nor explanations of the background of image
+registration. You do have to include your design choices and motivation thereof.</p>
+<p>Aim to present your most important findings in the main body of the report and (if needed) any additional information in an appendix. The following report structure is suggested for the main body of the report:</p>
+<ol class="arabic simple">
+<li><p>Introduce research question and hypothesis with its motivation (0.5 page)</p></li>
+<li><p>Study design: which data did you use, what are the requirements of your method, why did you make certain choices. Be as complete as possible w.r.t. the components of a study design. (0.5 page)</p></li>
+<li><p>Method, experiments and results for each research question (2 pages)</p></li>
+<li><p>Discussion section with analysis of the results. (1 page)</p></li>
+<li><p>Contributions: a brief description by each group member of their activities in the project which can be used to to adjust individual grades to reflect a student’s (lack of) contribution to the group</p></li>
+<li><p>If you use large language models (such as ChatGPT) in your course work, you are required to declare how and for what they were used and to include a reflection on the use of such tools.</p></li>
+</ol>
+<p>The page lengths above are indications. You are free to adapt them, with the constraint of a maximum length of five pages for the first four items listed.</p>
+<p>The report must be submitted as a single PDF file. The documented code must be submitted as a single archive file (e.g. zip or 7z) that is self-contained and can be used to reproduce the results in the report.</p>
+<p>Note that there is no single correct solution for the project. You have to demonstrate to the reader that you understand the methods that you have studied and can critically analyze the results of applying the methods. Below, you can find a set of assignments (guided project work) that will help you get started with the project work and, when correctly completed, will present you with a <strong>minimal solution</strong>. Solutions which go beyond these assignments are of course encouraged. Additionally,
+include the solutions to the preliminary guided project work within this notebook in the archive file.</p>
+<div id="assessment"></div></section>
+<section id="Assessment">
+<h2>Assessment<a class="headerlink" href="#Assessment" title="Link to this heading"></a></h2>
+<p>The rubric that will be used for assessment of the project work is given in <a class="reference external" href="https://github.com/tueimage/8BE030-MIA/blob/master/rubric.md">this table</a>. Please check this carefully!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div id="guided_work"></div></section>
+<section id="Preliminary-guided-project-work">
+<h2>Preliminary guided project work<a class="headerlink" href="#Preliminary-guided-project-work" title="Link to this heading"></a></h2>
+<div id="getting_started"></div><div style="float:right;margin:-5px 5px"><p><img alt="48454b8b330d4514904b97bf948a541f" class="no-scaled-link" height="42" src="../_images/read_ico.png" width="42" /></p>
+</div><section id="A.-Getting-started">
+<h3>A. Getting started<a class="headerlink" href="#A.-Getting-started" title="Link to this heading"></a></h3>
+<p>As an introduction, you will get familiar with the dataset that will be used in the first project and the control point selection tool that can be used to annotate corresponding points in pairs of related images. The annotated points can later be used to perform point-based registration and evaluation of the registration error.</p>
+<div id="dataset"></div></section>
+<section id="Dataset">
+<h3>Dataset<a class="headerlink" href="#Dataset" title="Link to this heading"></a></h3>
+<p>The image dataset is located in the <a class="reference external" href="https://github.com/tueimage/8BE030-MIA/tree/master/data/image_data">image_data</a> subfolder of the code for the registration exercises and project. The image filenames have the following format: <code class="docutils literal notranslate"><span class="pre">{Patient</span> <span class="pre">ID}_{Slice</span> <span class="pre">ID}_{Sequence}.tif</span></code>. For example, the filename <code class="docutils literal notranslate"><span class="pre">3_2_t1.tif</span></code> is the second slice from a T1-weighted scan of the third patient. Every T1 slice comes in two versions: original and transformed with some random transformation that can be
+identified with the <code class="docutils literal notranslate"><span class="pre">_d</span></code> suffix in the filename. This simulates a registration problem where you have to register two image acquisitions of the same patient (note however that some of the transformations that were used to simulate the second set of images are not realistic for brain imaging, e.g. brain scans typically do not encounter shearing between consecutive acquisitions).</p>
+<div style="float:right;margin:-5px 5px"><p><img alt="a850218e2cca46678f683dcec4d6b083" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-1:">
+<h3><em>Question 1</em>:<a class="headerlink" href="#Question-1:" title="Link to this heading"></a></h3>
+<p>With this dataset we can define two image registration problems: T1 to T1 registration (e.g. register <code class="docutils literal notranslate"><span class="pre">3_2_t1_d.tif</span></code> to <code class="docutils literal notranslate"><span class="pre">3_2_t1.tif</span></code>) and T2 to T1 registration (e.g. register <code class="docutils literal notranslate"><span class="pre">3_2_t2.tif</span></code> to <code class="docutils literal notranslate"><span class="pre">3_2_t1.tif</span></code>). Which one of these can be considered inter-modal image registration and which one intra-modal image registration?</p>
+<div id="selecting_point_pairs"></div></section>
+<section id="Selecting-corresponding-point-pairs">
+<h3>Selecting corresponding point pairs<a class="headerlink" href="#Selecting-corresponding-point-pairs" title="Link to this heading"></a></h3>
+<p>A function called <code class="docutils literal notranslate"><span class="pre">cpselect</span></code> is provided to select control points in two different images. This function provides two numpy arrays of cartesian coordinates, one array for each image, of points selected in the two images. The coordinate format is a numpy array with the X and Y on row 0 and 1 respectively, and each column being a point.</p>
+<p>Calling the function will cause a new interactive window to pop up, where you will see your two images and some instructions. For convenience, the instructions can also be found below:</p>
+<ul class="simple">
+<li><p>First select a point in Image 1 and then its corresponding point in Image 2. This pattern should be repeated for as many control points as you need. If you do not follow this pattern, the output arrays will be incorrect.</p></li>
+<li><p>Left Mouse Button to create a point.</p></li>
+<li><p>Right Mouse Button/Delete/Backspace to remove the newest point.</p></li>
+<li><p>Middle Mouse Button/Enter to finish placing points.</p></li>
+</ul>
+<div style="float:right;margin:-5px 5px"><p><img alt="43e1a7b4df0b429bac57c719b518b818" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Task-1:">
+<h3><em>Task 1</em>:<a class="headerlink" href="#Task-1:" title="Link to this heading"></a></h3>
+<p>Test the functionality of <code class="docutils literal notranslate"><span class="pre">cpselect</span></code> by running the following code example:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">registration_util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">util</span>
+
+<span class="n">I_path</span> <span class="o">=</span> <span class="s1">&#39;../data/image_data/1_1_t1.tif&#39;</span>
+<span class="n">Im_path</span> <span class="o">=</span> <span class="s1">&#39;../data/image_data/1_1_t1_d.tif&#39;</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">Xm</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">cpselect</span><span class="p">(</span><span class="n">I_path</span><span class="p">,</span> <span class="n">Im_path</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Xm:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Xm</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ImportError</span>                               Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[2]</span><span class="ansi-green-fg">, line 8</span>
+<span class="ansi-green-fg">      4</span>
+<span class="ansi-green-fg">      5</span> I_path = <span class="ansi-yellow-fg">&#39;../data/image_data/1_1_t1.tif&#39;</span>
+<span class="ansi-green-fg">      6</span> Im_path = <span class="ansi-yellow-fg">&#39;../data/image_data/1_1_t1_d.tif&#39;</span>
+<span class="ansi-green-fg">      7</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">8</span> X, Xm = util.cpselect(I_path, Im_path)
+<span class="ansi-green-fg">      9</span>
+<span class="ansi-green-fg">     10</span> print(<span class="ansi-yellow-fg">&#39;X:\n{}&#39;</span>.format(X))
+<span class="ansi-green-fg">     11</span> print(<span class="ansi-yellow-fg">&#39;Xm:\n{}&#39;</span>.format(Xm))
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\registration_util.py:75</span>, in <span class="ansi-cyan-fg">cpselect</span><span class="ansi-blue-fg">(imagePath1, imagePath2)</span>
+<span class="ansi-green-fg">     72</span> image2 = plt.imread(imagePath2)
+<span class="ansi-green-fg">     74</span> <span style="color: rgb(95,135,135)">#ensure that the plot opens in its own window</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">75</span> <span class="ansi-yellow-bg">get_ipython</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">run_line_magic</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-fg ansi-yellow-bg">&#39;</span><span class="ansi-yellow-fg ansi-yellow-bg">matplotlib</span><span class="ansi-yellow-fg ansi-yellow-bg">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">&#39;</span><span class="ansi-yellow-fg ansi-yellow-bg">qt</span><span class="ansi-yellow-fg ansi-yellow-bg">&#39;</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     77</span> <span style="color: rgb(95,135,135)">#set up the overarching window</span>
+<span class="ansi-green-fg">     78</span> fig, axes = plt.subplots(<span class="ansi-green-fg">1</span>,<span class="ansi-green-fg">2</span>)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~\.conda\envs\8be030\Lib\site-packages\matplotlib\pyplot.py:424</span>, in <span class="ansi-cyan-fg">switch_backend</span><span class="ansi-blue-fg">(newbackend)</span>
+<span class="ansi-green-fg">    421</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">return</span>
+<span class="ansi-green-fg">    422</span> old_backend = rcParams._get(<span class="ansi-yellow-fg">&#39;</span><span class="ansi-yellow-fg">backend</span><span class="ansi-yellow-fg">&#39;</span>)  <span style="color: rgb(95,135,135)"># get without triggering backend resolution</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">424</span> module = <span class="ansi-yellow-bg">backend_registry</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">load_backend_module</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">newbackend</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    425</span> canvas_class = module.FigureCanvas
+<span class="ansi-green-fg">    427</span> required_framework = canvas_class.required_interactive_framework
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~\.conda\envs\8be030\Lib\site-packages\matplotlib\backends\registry.py:317</span>, in <span class="ansi-cyan-fg">BackendRegistry.load_backend_module</span><span class="ansi-blue-fg">(self, backend)</span>
+<span class="ansi-green-fg">    303</span> <span class="ansi-yellow-fg">&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">    304</span> <span class="ansi-yellow-fg">Load and return the module containing the specified backend.</span>
+<span class="ansi-green-fg">    305</span>
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    314</span> <span class="ansi-yellow-fg">    Module containing backend.</span>
+<span class="ansi-green-fg">    315</span> <span class="ansi-yellow-fg">&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">    316</span> module_name = <span style="color: rgb(0,135,0)">self</span>._backend_module_name(backend)
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">317</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">importlib</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">import_module</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">module_name</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~\.conda\envs\8be030\Lib\importlib\__init__.py:88</span>, in <span class="ansi-cyan-fg">import_module</span><span class="ansi-blue-fg">(name, package)</span>
+<span class="ansi-green-fg">     86</span>             <span class="ansi-bold" style="color: rgb(0,135,0)">break</span>
+<span class="ansi-green-fg">     87</span>         level += <span class="ansi-green-fg">1</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">88</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">_bootstrap</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_gcd_import</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">level</span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">package</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">level</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">&lt;frozen importlib._bootstrap&gt;:1395</span>, in <span class="ansi-cyan-fg">_gcd_import</span><span class="ansi-blue-fg">(name, package, level)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">&lt;frozen importlib._bootstrap&gt;:1360</span>, in <span class="ansi-cyan-fg">_find_and_load</span><span class="ansi-blue-fg">(name, import_)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">&lt;frozen importlib._bootstrap&gt;:1334</span>, in <span class="ansi-cyan-fg">_find_and_load_unlocked</span><span class="ansi-blue-fg">(name, import_)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">&lt;frozen importlib._bootstrap&gt;:950</span>, in <span class="ansi-cyan-fg">_load_unlocked</span><span class="ansi-blue-fg">(spec)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">&lt;frozen importlib._bootstrap_external&gt;:1023</span>, in <span class="ansi-cyan-fg">_LoaderBasics.exec_module</span><span class="ansi-blue-fg">(self, module)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">&lt;frozen importlib._bootstrap&gt;:488</span>, in <span class="ansi-cyan-fg">_call_with_frames_removed</span><span class="ansi-blue-fg">(f, *args, **kwds)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~\.conda\envs\8be030\Lib\site-packages\matplotlib\backends\backend_qtagg.py:9</span>
+<span class="ansi-green-fg">      5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">ctypes</span>
+<span class="ansi-green-fg">      7</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">matplotlib</span><span class="ansi-blue-intense-fg ansi-bold">.</span><span class="ansi-blue-intense-fg ansi-bold">transforms</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">import</span> Bbox
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">9</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">.</span><span class="ansi-blue-intense-fg ansi-bold">qt_compat</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">import</span> QT_API, QtCore, QtGui
+<span class="ansi-green-fg">     10</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">.</span><span class="ansi-blue-intense-fg ansi-bold">backend_agg</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">import</span> FigureCanvasAgg
+<span class="ansi-green-fg">     11</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">.</span><span class="ansi-blue-intense-fg ansi-bold">backend_qt</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">import</span> _BackendQT, FigureCanvasQT
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~\.conda\envs\8be030\Lib\site-packages\matplotlib\backends\qt_compat.py:130</span>
+<span class="ansi-green-fg">    128</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">break</span>
+<span class="ansi-green-fg">    129</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">130</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">ImportError</span>(
+<span class="ansi-green-fg">    131</span>             <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">Failed to import any of the following Qt binding modules: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    132</span>             .format(<span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">, </span><span class="ansi-yellow-fg">&#34;</span>.join([QT_API <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> _, QT_API <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> _candidates]))
+<span class="ansi-green-fg">    133</span>         )
+<span class="ansi-green-fg">    134</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:  <span style="color: rgb(95,135,135)"># We should not get there.</span>
+<span class="ansi-green-fg">    135</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">AssertionError</span>(<span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">Unexpected QT_API: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>QT_API<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg">&#34;</span>)
+
+<span class="ansi-red-fg">ImportError</span>: Failed to import any of the following Qt binding modules: PyQt6, PySide6, PyQt5, PySide2
+</pre></div></div>
+</div>
+<div id="point-based_reg"></div></section>
+</section>
+<section id="B.-Point-based-registration">
+<h2>B. Point-based registration<a class="headerlink" href="#B.-Point-based-registration" title="Link to this heading"></a></h2>
+<div style="float:right;margin:-5px 5px"><p><img alt="6031c0f7565d4cdcb8cdbb5f84bc7beb" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div><div id="affine"></div><section id="Point-based-affine-image-registration">
+<h3>Point-based affine image registration<a class="headerlink" href="#Point-based-affine-image-registration" title="Link to this heading"></a></h3>
+<p>From the provided dataset for this project, select one pair of T1 image slices (e.g. <code class="docutils literal notranslate"><span class="pre">3_2_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">3_2_t1_d.tif</span></code>) and use <code class="docutils literal notranslate"><span class="pre">my_cpselect</span></code> to select a set of corresponding points. Then, compute the affine transformation between the pair of images with <code class="docutils literal notranslate"><span class="pre">ls_affine</span></code> and apply it to the moving image using <code class="docutils literal notranslate"><span class="pre">image_transform</span></code>.</p>
+<p>Repeat the same for a pair of corresponding T1 and T2 slices (e.g. <code class="docutils literal notranslate"><span class="pre">3_2_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">3_2_t2.tif</span></code>).</p>
+<div id="evaluation"></div></section>
+<section id="Evaluation-of-point-based-affine-image-registration">
+<h3>Evaluation of point-based affine image registration<a class="headerlink" href="#Evaluation-of-point-based-affine-image-registration" title="Link to this heading"></a></h3>
+<div style="float:right;margin:-5px 5px"><p><img alt="d1245a5fb5f9499badb0f70ddd0a2204" class="no-scaled-link" height="42" src="../_images/question_ico.png" width="42" /></p>
+</div></section>
+<section id="Question-2:">
+<h3><em>Question 2</em>:<a class="headerlink" href="#Question-2:" title="Link to this heading"></a></h3>
+<p>Describe how you would estimate the registration error. (Hint: Should you use the same points that you used for computing the affine transformation to also compute the registration error?) How does the number of corresponding point pairs affect the registration error? Motivate all your answers.</p>
+<div id="intensity-based_reg"></div></section>
+</section>
+<section id="C.-Intensity-based-registration">
+<h2>C. Intensity-based registration<a class="headerlink" href="#C.-Intensity-based-registration" title="Link to this heading"></a></h2>
+<div style="float:right;margin:-5px 5px"><p><img alt="b0d55fa1c23447d3b5333ee9850c2448" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div><div id="comparison"></div><section id="Comparing-the-results-of-different-registration-methods">
+<h3>Comparing the results of different registration methods<a class="headerlink" href="#Comparing-the-results-of-different-registration-methods" title="Link to this heading"></a></h3>
+<p>The following Python script (provided as <code class="docutils literal notranslate"><span class="pre">intensity_based_registration_demo()</span></code>) performs rigid intensity-based registration of two images using the normalized-cross correlation as a similarity metric:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../code&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">registration_project</span><span class="w"> </span><span class="kn">import</span> <span class="n">intensity_based_registration_demo</span>
+
+<span class="n">intensity_based_registration_demo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[3]</span><span class="ansi-green-fg">, line 6</span>
+<span class="ansi-green-fg">      2</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> sys
+<span class="ansi-green-fg">      3</span> sys.path.append(<span class="ansi-yellow-fg">&#34;../code&#34;</span>)
+<span class="ansi-green-fg">      4</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> registration_project <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> intensity_based_registration_demo
+<span class="ansi-green-fg">      5</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">6</span> intensity_based_registration_demo()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\registration_project.py:74</span>, in <span class="ansi-cyan-fg">intensity_based_registration_demo</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">     71</span> x += g*mu
+<span class="ansi-green-fg">     73</span> <span style="color: rgb(95,135,135)"># for visualization of the result</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">74</span> S, Im_t, _ = <span class="ansi-yellow-bg">reg</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">rigid_corr</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">I</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">Im</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">x</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">return_transform</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     76</span> clear_output(wait = <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)
+<span class="ansi-green-fg">     78</span> <span style="color: rgb(95,135,135)"># update moving image and parameters</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\registration.py:358</span>, in <span class="ansi-cyan-fg">rigid_corr</span><span class="ansi-blue-fg">(I, Im, x, return_transform)</span>
+<span class="ansi-green-fg">    355</span> Th = util.t2h(T, x[<span class="ansi-green-fg">1</span>:]*SCALING)
+<span class="ansi-green-fg">    357</span> <span style="color: rgb(95,135,135)"># transform the moving image</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">358</span> Im_t, Xt = <span class="ansi-yellow-bg">image_transform</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">Im</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">Th</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    360</span> <span style="color: rgb(95,135,135)"># compute the similarity between the fixed and transformed</span>
+<span class="ansi-green-fg">    361</span> <span style="color: rgb(95,135,135)"># moving image</span>
+<span class="ansi-green-fg">    362</span> C = correlation(I, Im_t)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">D:\Developer\GitHub\8be030-mia-docs\docs\source\reader\../code\registration.py:122</span>, in <span class="ansi-cyan-fg">image_transform</span><span class="ansi-blue-fg">(I, Th, output_shape)</span>
+<span class="ansi-green-fg">    116</span> Xh = util.c2h(X)
+<span class="ansi-green-fg">    118</span> <span style="color: rgb(95,135,135)">#------------------------------------------------------------------#</span>
+<span class="ansi-green-fg">    119</span> <span style="color: rgb(95,135,135)"># TODO: Perform inverse coordinates mapping.</span>
+<span class="ansi-green-fg">    120</span> <span style="color: rgb(95,135,135)">#------------------------------------------------------------------#</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">122</span> It = ndimage.map_coordinates(I, [<span class="ansi-yellow-bg">Xt</span>[<span class="ansi-green-fg">1</span>,:], Xt[<span class="ansi-green-fg">0</span>,:]], order=<span class="ansi-green-fg">1</span>, mode=<span class="ansi-yellow-fg">&#39;</span><span class="ansi-yellow-fg">constant</span><span class="ansi-yellow-fg">&#39;</span>).reshape(output_shape)
+<span class="ansi-green-fg">    124</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> It, Xt
+
+<span class="ansi-red-fg">NameError</span>: name &#39;Xt&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/reader_1.6_Registration_project_11_1.svg" src="../_images/reader_1.6_Registration_project_11_1.svg" />
+</div>
+</div>
+<div style="float:right;margin:-5px 5px"><p><img alt="ac33a456b1714a0086b6914be65cb3d4" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+<section id="Task-2:">
+<h3><em>Task 2</em>:<a class="headerlink" href="#Task-2:" title="Link to this heading"></a></h3>
+<p>By changing the similarity function and the initial parameter vector, you can also use this script to perform affine registration and use mutual information as a similarity measure. Do not forget to also change the transformation for the visualization of the results.</p>
+<p>Using the provided dataset and the functions that you have implemented in the exercises, perform the following series of experiments:</p>
+<ol class="arabic simple">
+<li><p>Rigid intensity-based registration of two T1 slices (e.g. <code class="docutils literal notranslate"><span class="pre">1_1_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">1_1_t1_d.tif</span></code>) using normalized cross-correlation as a similarity measure.</p></li>
+<li><p>Affine intensity-based registration of two T1 slices (e.g. <code class="docutils literal notranslate"><span class="pre">1_1_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">1_1_t1_d.tif</span></code>) using normalized cross-correlation as a similarity measure.</p></li>
+<li><p>Affine intensity-based registration of a T1 and a T2 slice (e.g. <code class="docutils literal notranslate"><span class="pre">1_1_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">1_1_t2.tif</span></code>) using normalized cross-correlation as a similarity measure.</p></li>
+<li><p>Affine intensity-based registration of two T1 slices (e.g. <code class="docutils literal notranslate"><span class="pre">1_1_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">1_1_t1_d.tif</span></code>) using mutual information as a similarity measure.</p></li>
+<li><p>Affine intensity-based registration of a T1 slice and a T2 slice (e.g. <code class="docutils literal notranslate"><span class="pre">1_1_t1.tif</span></code> and <code class="docutils literal notranslate"><span class="pre">1_1_t2.tif</span></code>) using mutual information as a similarity measure.</p></li>
+</ol>
+<p>Compare the results from each experiment. If a method fails, describe why you think it fails. Note that you will most likely have to try different values for the learning rate in each experiment in order to find the one that works best.</p>
+<div id="open-end"></div><div style="float:right;margin:-5px 5px"><p><img alt="d30e5ea3871c4259bcc2961028bcfd00" class="no-scaled-link" height="42" src="../_images/todo_ico.png" width="42" /></p>
+</div></section>
+</section>
+<section id="Open-ended-project-work">
+<h2>Open-ended project work<a class="headerlink" href="#Open-ended-project-work" title="Link to this heading"></a></h2>
+<p>Define and motivate one research question that you will investigate. This can be a question relating to a method (e.g. what is the impact of X on a particular method) or relating to the problem (e.g. does a specific method fail in specific cases). It is recommended to get feedback on your research question from the teaching assistants.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="1.5_Validation_in_medical_image_analysis_part_1.html" class="btn btn-neutral float-left" title="Topic 1.5: Validation in medical image analysis (Registration)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="2.1_segmentation_introduction.html" class="btn btn-neutral float-right" title="Topic 2.1: Exercises - Image segmentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Ruisheng Su.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
