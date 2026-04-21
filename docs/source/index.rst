@@ -8,7 +8,7 @@ Medical Image Analysis (8BE030) documentation
 
 | *Course website*: https://github.com/tueimage/8be030-mia
 | *Course edition*: Spring 2026
-| *Virtual reader*: https://8be030-mia-docs.readthedocs.io/en/latest/
+| *Virtual reader*: https://8be030-mia.readthedocs.io/en/latest/
 
 This course is a sequel to the introductory medical imaging course 8BB050 in which some of the basic principles of image analysis were covered and the introductory machine learning course 8BB020. In 8BE030 we will concentrate on the more advanced image analysis methods and on how they can be used to tackle clinical problems. Topics covered include image registration, segmentation and deep learning applications in medical image analysis.
 
